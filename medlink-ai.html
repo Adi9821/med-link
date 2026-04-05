@@ -1,0 +1,1810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MEDLINK-AI | One Digital Health ID. Lifetime Medical History.</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: { primary: '#0066CC', accent: '#00C853' },
+      fontFamily: { display: ['Syne','sans-serif'], body: ['DM Sans','sans-serif'] }
+    }
+  }
+}
+</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;transition:background 0.3s,color 0.3s}
+h1,h2,h3,.font-display{font-family:'Syne',sans-serif}
+:root{--p:#0066CC;--a:#00C853;--p2:#004499;--bg:#f0f6ff;--card:#fff;--text:#0a1628;--sub:#4a6080;--border:#d0e4f7}
+.dark{--bg:#050e1a;--card:#0a1628;--text:#e8f3ff;--sub:#7a9bbf;--border:#1a3050}
+body{background:var(--bg);color:var(--text)}
+
+/* ===GLASS=== */
+.glass{background:rgba(255,255,255,0.08);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.15)}
+.glass-card{background:rgba(255,255,255,0.72);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.5);box-shadow:0 8px 32px rgba(0,102,204,0.08)}
+.dark .glass-card{background:rgba(10,22,40,0.72);border:1px solid rgba(255,255,255,0.08);box-shadow:0 8px 32px rgba(0,0,0,0.4)}
+
+/* ===GRADIENT TEXT=== */
+.grad{background:linear-gradient(135deg,#0066CC,#00C853);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* ===HERO BG=== */
+.hero-bg{background:linear-gradient(135deg,#00050f 0%,#001a44 45%,#002211 100%);position:relative;overflow:hidden}
+.hero-bg::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 60% 40%,rgba(0,102,204,0.25) 0%,transparent 70%),radial-gradient(ellipse 60% 50% at 20% 80%,rgba(0,200,83,0.15) 0%,transparent 70%);pointer-events:none}
+.hero-grid{background-image:linear-gradient(rgba(0,102,204,0.08) 1px,transparent 1px),linear-gradient(90deg,rgba(0,102,204,0.08) 1px,transparent 1px);background-size:60px 60px;position:absolute;inset:0;pointer-events:none}
+
+/* ===NAVBAR=== */
+#navbar{position:fixed;top:0;left:0;right:0;z-index:500;backdrop-filter:blur(20px);transition:all 0.3s;border-bottom:1px solid transparent}
+#navbar.scrolled{background:rgba(255,255,255,0.92);border-bottom-color:var(--border);box-shadow:0 4px 20px rgba(0,102,204,0.08)}
+.dark #navbar.scrolled{background:rgba(5,14,26,0.95);border-bottom-color:var(--border)}
+.nav-link{font-weight:500;font-size:14px;padding:6px 14px;border-radius:8px;transition:all 0.2s;color:var(--text)}
+.nav-link:hover,.nav-link.active{background:rgba(0,102,204,0.1);color:var(--p)}
+.dark .nav-link:hover,.dark .nav-link.active{background:rgba(0,102,204,0.2)}
+
+/* ===PAGES=== */
+.page{display:none;min-height:100vh}
+.page.active{display:block}
+.dash-view{display:none}
+.dash-view.active{display:flex;min-height:100vh}
+
+/* ===CARDS=== */
+.feat-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:28px;transition:all 0.35s cubic-bezier(0.34,1.56,0.64,1);cursor:default}
+.feat-card:hover{transform:translateY(-10px);box-shadow:0 24px 60px rgba(0,102,204,0.18);border-color:rgba(0,102,204,0.3)}
+.icon-box{width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:24px}
+
+/* ===BUTTONS=== */
+.btn-primary{background:linear-gradient(135deg,#0066CC,#0052a3);color:#fff;padding:14px 32px;border-radius:12px;font-weight:600;font-size:15px;border:none;cursor:pointer;transition:all 0.3s;display:inline-flex;align-items:center;gap:8px}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(0,102,204,0.35)}
+.btn-accent{background:linear-gradient(135deg,#00C853,#009e42);color:#fff;padding:14px 32px;border-radius:12px;font-weight:600;font-size:15px;border:none;cursor:pointer;transition:all 0.3s;display:inline-flex;align-items:center;gap:8px}
+.btn-accent:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(0,200,83,0.35)}
+.btn-outline{border:2px solid var(--p);color:var(--p);padding:12px 28px;border-radius:12px;font-weight:600;font-size:15px;background:transparent;cursor:pointer;transition:all 0.3s;display:inline-flex;align-items:center;gap:8px}
+.btn-outline:hover{background:var(--p);color:#fff}
+
+/* ===MODAL=== */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);z-index:900;align-items:center;justify-content:center;padding:16px}
+.modal-bg.open{display:flex}
+.modal-box{background:var(--card);border-radius:24px;padding:40px;width:100%;max-width:480px;position:relative;animation:modalIn 0.35s cubic-bezier(0.34,1.56,0.64,1)}
+@keyframes modalIn{from{opacity:0;transform:scale(0.85) translateY(30px)}to{opacity:1;transform:scale(1) translateY(0)}}
+
+/* ===FORM FIELDS=== */
+.field{width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:12px;font-size:15px;font-family:'DM Sans',sans-serif;background:var(--card);color:var(--text);transition:border 0.2s,box-shadow 0.2s;outline:none}
+.field:focus{border-color:var(--p);box-shadow:0 0 0 3px rgba(0,102,204,0.12)}
+.field-label{font-size:13px;font-weight:600;color:var(--sub);margin-bottom:6px;display:block}
+
+/* ===TABS=== */
+.tab-btn{padding:10px 20px;border-radius:10px;font-weight:600;font-size:14px;border:none;cursor:pointer;background:transparent;color:var(--sub);transition:all 0.2s}
+.tab-btn.active{background:linear-gradient(135deg,#0066CC,#0052a3);color:#fff}
+
+/* ===SIDEBAR=== */
+.sidebar{width:260px;background:var(--card);border-right:1px solid var(--border);padding:20px 0;flex-shrink:0;position:sticky;top:0;height:100vh;overflow-y:auto}
+.dash-main{flex:1;overflow-y:auto;padding:32px}
+.side-item{display:flex;align-items:center;gap:12px;padding:12px 20px;cursor:pointer;font-weight:500;font-size:15px;color:var(--sub);transition:all 0.2s;border-radius:0;border-left:3px solid transparent}
+.side-item:hover{background:rgba(0,102,204,0.06);color:var(--p);border-left-color:var(--p)}
+.side-item.active{background:rgba(0,102,204,0.1);color:var(--p);border-left-color:var(--p);font-weight:600}
+.dark .side-item:hover,.dark .side-item.active{background:rgba(0,102,204,0.15)}
+
+/* ===STAT CARD=== */
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:24px}
+
+/* ===UPLOAD ZONE=== */
+.upload-zone{border:2px dashed rgba(0,102,204,0.35);border-radius:16px;padding:40px;text-align:center;cursor:pointer;transition:all 0.3s}
+.upload-zone:hover,.upload-zone.over{border-color:var(--p);background:rgba(0,102,204,0.04)}
+
+/* ===TABLE=== */
+.data-table{width:100%;border-collapse:collapse}
+.data-table th{text-align:left;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--sub);padding:12px 16px;border-bottom:1px solid var(--border)}
+.data-table td{padding:14px 16px;border-bottom:1px solid var(--border);font-size:14px}
+.data-table tr:hover td{background:rgba(0,102,204,0.03)}
+
+/* ===BADGE=== */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:100px;font-size:12px;font-weight:600}
+.badge-green{background:rgba(0,200,83,0.12);color:#00a844}
+.badge-blue{background:rgba(0,102,204,0.12);color:#0066CC}
+.badge-orange{background:rgba(255,150,0,0.12);color:#c87800}
+.badge-red{background:rgba(220,38,38,0.12);color:#dc2626}
+
+/* ===NOTIFICATION=== */
+#notif{position:fixed;top:88px;right:24px;z-index:9999;transform:translateX(200%);transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1);max-width:320px}
+#notif.show{transform:translateX(0)}
+
+/* ===TIMELINE=== */
+.tl-line{position:absolute;left:27px;top:56px;bottom:-24px;width:2px;background:linear-gradient(to bottom,#0066CC,#00C853)}
+.tl-last .tl-line{display:none}
+
+/* ===SECTION BG=== */
+.section-alt{background:linear-gradient(135deg,rgba(0,102,204,0.04),rgba(0,200,83,0.04))}
+.dark .section-alt{background:linear-gradient(135deg,rgba(0,102,204,0.08),rgba(0,200,83,0.06))}
+
+/* ===ANIMATIONS=== */
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes pulse-ring{0%{transform:scale(1);opacity:0.8}100%{transform:scale(1.6);opacity:0}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+.float{animation:float 4s ease-in-out infinite}
+.spin{animation:spin 1s linear infinite}
+.shimmer{background:linear-gradient(90deg,transparent 25%,rgba(255,255,255,0.4) 50%,transparent 75%);background-size:200% 100%;animation:shimmer 1.5s infinite}
+
+/* ===SCROLLBAR=== */
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(0,102,204,0.3);border-radius:3px}
+
+/* ===RESPONSIVE=== */
+@media(max-width:768px){
+  .sidebar{display:none}.sidebar.open{display:flex;flex-direction:column;position:fixed;z-index:400;top:0;left:0;bottom:0;width:260px}
+  .dash-main{padding:20px}
+  .hide-mobile{display:none!important}
+}
+
+/* ===TECH ARCH=== */
+.arch-box{border:1.5px solid var(--border);border-radius:14px;padding:16px 20px;background:var(--card);text-align:center;font-weight:600;font-size:14px}
+.arch-arrow{width:40px;height:2px;background:linear-gradient(90deg,#0066CC,#00C853);position:relative;margin:auto}
+.arch-arrow::after{content:'▶';position:absolute;right:-8px;top:-8px;color:#00C853;font-size:16px}
+
+/* ===QR WRAPPER=== */
+#qrcode-display canvas,#qrcode-display img{border-radius:12px;display:block;margin:auto}
+
+/* ===HERO STAT CARD=== */
+.hero-stat{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:16px;padding:20px 24px;backdrop-filter:blur(12px)}
+
+/* ===HAMBURGER=== */
+.ham span{display:block;width:22px;height:2px;background:currentColor;margin:5px 0;transition:all 0.3s;border-radius:2px}
+.ham.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+.ham.open span:nth-child(2){opacity:0}
+.ham.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+</style>
+</head>
+<body class="">
+
+<!-- NOTIFICATION TOAST -->
+<div id="notif" class="glass-card rounded-2xl p-4 flex items-center gap-3">
+  <span id="notif-icon" class="text-2xl">✅</span>
+  <span id="notif-msg" class="font-body text-sm font-500" style="color:var(--text)">Success</span>
+</div>
+
+<!-- ===================== NAVBAR ===================== -->
+<nav id="navbar" class="px-6 py-3">
+  <div class="max-w-7xl mx-auto flex items-center justify-between">
+    <!-- Logo -->
+    <div class="flex items-center gap-2 cursor-pointer" onclick="showPage('home')">
+      <div style="width:36px;height:36px;background:linear-gradient(135deg,#0066CC,#00C853);border-radius:10px;display:flex;align-items:center;justify-content:center">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      </div>
+      <span style="font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:var(--text)">MEDLINK<span class="grad">-AI</span></span>
+    </div>
+
+    <!-- Desktop Nav -->
+    <div class="hidden md:flex items-center gap-1" id="nav-links">
+      <button class="nav-link active" onclick="showPage('home')" data-page="home">Home</button>
+      <button class="nav-link" onclick="showPage('features')" data-page="features">Features</button>
+      <button class="nav-link" onclick="showPage('howitworks')" data-page="howitworks">How It Works</button>
+      <button class="nav-link" onclick="showPage('techstack')" data-page="techstack">Tech Stack</button>
+      <button class="nav-link" onclick="showPage('team')" data-page="team">Team</button>
+    </div>
+
+    <!-- Right actions -->
+    <div class="flex items-center gap-3">
+      <!-- Dark mode -->
+      <button onclick="toggleDark()" id="dark-btn" style="width:36px;height:36px;border-radius:10px;background:rgba(0,102,204,0.1);border:none;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center">🌙</button>
+      <!-- Login dropdown -->
+      <div class="relative hidden md:block" id="login-dropdown-wrap">
+        <button onclick="toggleLoginMenu()" class="btn-outline" style="padding:10px 20px;font-size:14px">Login ▾</button>
+        <div id="login-menu" class="hidden absolute right-0 mt-2 glass-card rounded-2xl overflow-hidden" style="min-width:180px;z-index:600">
+          <button onclick="openLogin('patient')" class="w-full text-left px-5 py-3 font-body text-sm font-medium hover:bg-blue-50 dark:hover:bg-blue-900/20 flex items-center gap-3" style="color:var(--text)"><span>🧑‍⚕️</span> Patient Login</button>
+          <button onclick="openLogin('doctor')" class="w-full text-left px-5 py-3 font-body text-sm font-medium hover:bg-blue-50 dark:hover:bg-blue-900/20 flex items-center gap-3" style="color:var(--text)"><span>👨‍⚕️</span> Doctor Login</button>
+          <button onclick="openLogin('admin')" class="w-full text-left px-5 py-3 font-body text-sm font-medium hover:bg-blue-50 dark:hover:bg-blue-900/20 flex items-center gap-3" style="color:var(--text)"><span>🔐</span> Admin Login</button>
+          <div style="height:1px;background:var(--border);margin:4px 0"></div>
+          <button onclick="openRegister()" class="w-full text-left px-5 py-3 font-body text-sm font-semibold hover:bg-green-50 dark:hover:bg-green-900/20 flex items-center gap-3" style="color:#00C853"><span>✨</span> Register</button>
+        </div>
+      </div>
+      <!-- Mobile hamburger -->
+      <button class="ham md:hidden" id="ham-btn" onclick="toggleMobileMenu()" style="background:none;border:none;cursor:pointer;color:var(--text);padding:4px">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+  <!-- Mobile menu -->
+  <div id="mobile-menu" class="hidden md:hidden px-2 pb-4 pt-2 border-t mt-3" style="border-color:var(--border)">
+    <button class="nav-link w-full text-left mb-1" onclick="showPage('home');closeMobileMenu()">🏠 Home</button>
+    <button class="nav-link w-full text-left mb-1" onclick="showPage('features');closeMobileMenu()">⚡ Features</button>
+    <button class="nav-link w-full text-left mb-1" onclick="showPage('howitworks');closeMobileMenu()">🔄 How It Works</button>
+    <button class="nav-link w-full text-left mb-1" onclick="showPage('techstack');closeMobileMenu()">🏗️ Tech Stack</button>
+    <button class="nav-link w-full text-left mb-1" onclick="showPage('team');closeMobileMenu()">👥 Team</button>
+    <div style="height:1px;background:var(--border);margin:8px 0"></div>
+    <button onclick="openLogin('patient');closeMobileMenu()" class="nav-link w-full text-left mb-1">🧑‍⚕️ Patient Login</button>
+    <button onclick="openLogin('doctor');closeMobileMenu()" class="nav-link w-full text-left mb-1">👨‍⚕️ Doctor Login</button>
+    <button onclick="openLogin('admin');closeMobileMenu()" class="nav-link w-full text-left mb-1">🔐 Admin Login</button>
+    <button onclick="openRegister();closeMobileMenu()" class="nav-link w-full text-left" style="color:#00C853">✨ Register</button>
+  </div>
+</nav>
+
+<!-- ========================================================= -->
+<!-- PAGE: HOME -->
+<!-- ========================================================= -->
+<div id="page-home" class="page active">
+  <!-- HERO -->
+  <section class="hero-bg min-h-screen flex items-center pt-20 pb-16 relative">
+    <div class="hero-grid"></div>
+    <!-- Floating orbs -->
+    <div style="position:absolute;top:15%;right:10%;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(0,102,204,0.2),transparent);filter:blur(40px);pointer-events:none"></div>
+    <div style="position:absolute;bottom:20%;left:5%;width:250px;height:250px;border-radius:50%;background:radial-gradient(circle,rgba(0,200,83,0.15),transparent);filter:blur(40px);pointer-events:none"></div>
+
+    <div class="max-w-7xl mx-auto px-6 w-full">
+      <div class="grid lg:grid-cols-2 gap-16 items-center">
+        <!-- Left -->
+        <div>
+          <div class="badge badge-green mb-6 float" style="background:rgba(0,200,83,0.15);color:#00C853;font-size:13px;padding:8px 16px">
+            🚀 Hackathon Demo Ready
+          </div>
+          <h1 style="font-size:clamp(2.4rem,5vw,4rem);line-height:1.1;color:#fff;margin-bottom:24px">
+            One Digital<br>
+            <span class="grad">Health ID.</span><br>
+            Lifetime Medical<br>History Access.
+          </h1>
+          <p style="font-size:18px;color:rgba(255,255,255,0.7);line-height:1.7;max-width:480px;margin-bottom:36px">
+            MEDLINK-AI unifies your entire medical history under a single secure digital identity. AI-powered summaries, instant QR access, and cross-hospital sharing — all in one ecosystem.
+          </p>
+
+          <!-- Stats row -->
+          <div class="flex flex-wrap gap-4 mb-10">
+            <div class="hero-stat">
+              <div style="font-size:28px;font-weight:800;color:#ff6b35;font-family:'Syne',sans-serif">73s</div>
+              <div style="font-size:12px;color:rgba(255,255,255,0.6);margin-top:2px">Avg. time wasted searching<br>records in emergencies</div>
+            </div>
+            <div class="hero-stat">
+              <div style="font-size:28px;font-weight:800;color:#ffcc00;font-family:'Syne',sans-serif">34%</div>
+              <div style="font-size:12px;color:rgba(255,255,255,0.6);margin-top:2px">Medical errors caused by<br>incomplete patient records</div>
+            </div>
+            <div class="hero-stat">
+              <div style="font-size:28px;font-weight:800;color:#00C853;font-family:'Syne',sans-serif">1.2B+</div>
+              <div style="font-size:12px;color:rgba(255,255,255,0.6);margin-top:2px">People without digital<br>health records</div>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap gap-4">
+            <button class="btn-accent" onclick="openLogin('patient')" style="font-size:16px;padding:16px 36px">
+              🚀 Demo Now
+            </button>
+            <button class="btn-outline" onclick="showPage('howitworks')" style="color:rgba(255,255,255,0.8);border-color:rgba(255,255,255,0.3)">
+              How It Works ↓
+            </button>
+          </div>
+
+          <!-- Demo credentials hint -->
+          <div style="margin-top:20px;padding:12px 18px;background:rgba(0,102,204,0.15);border:1px solid rgba(0,102,204,0.25);border-radius:12px;font-size:13px;color:rgba(255,255,255,0.7)">
+            💡 <strong style="color:#fff">Demo:</strong> patient@demo.com / demo123 &nbsp;|&nbsp; doctor@demo.com / demo123 &nbsp;|&nbsp; admin@demo.com / admin123
+          </div>
+        </div>
+
+        <!-- Right: Interactive Health Card -->
+        <div class="flex justify-center">
+          <div class="float" style="width:100%;max-width:400px">
+            <!-- Health ID Card -->
+            <div style="background:linear-gradient(135deg,#0066CC,#004499);border-radius:24px;padding:32px;color:white;box-shadow:0 40px 80px rgba(0,0,0,0.4);position:relative;overflow:hidden">
+              <div style="position:absolute;top:-30px;right:-30px;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,0.05)"></div>
+              <div style="position:absolute;bottom:-20px;left:-20px;width:100px;height:100px;border-radius:50%;background:rgba(0,200,83,0.1)"></div>
+              <div class="flex items-center justify-between mb-6">
+                <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:18px">MEDLINK-AI</div>
+                <div style="background:rgba(0,200,83,0.2);padding:4px 12px;border-radius:100px;font-size:12px;font-weight:600;color:#00C853">● ACTIVE</div>
+              </div>
+              <div style="margin-bottom:24px">
+                <div style="font-size:11px;opacity:0.6;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Digital Health ID</div>
+                <div style="font-size:22px;font-weight:700;letter-spacing:2px;font-family:'Syne',sans-serif" id="hero-hid">MED-2024-7829</div>
+              </div>
+              <div class="grid grid-cols-2 gap-4 mb-6">
+                <div>
+                  <div style="font-size:11px;opacity:0.6;text-transform:uppercase;letter-spacing:1px">Patient</div>
+                  <div style="font-weight:600;margin-top:2px">Rahul Sharma</div>
+                </div>
+                <div>
+                  <div style="font-size:11px;opacity:0.6;text-transform:uppercase;letter-spacing:1px">Blood Type</div>
+                  <div style="font-weight:600;margin-top:2px">B+</div>
+                </div>
+                <div>
+                  <div style="font-size:11px;opacity:0.6;text-transform:uppercase;letter-spacing:1px">Allergies</div>
+                  <div style="font-weight:600;margin-top:2px">Penicillin</div>
+                </div>
+                <div>
+                  <div style="font-size:11px;opacity:0.6;text-transform:uppercase;letter-spacing:1px">Emergency</div>
+                  <div style="font-weight:600;margin-top:2px">+91-98XXXXXX</div>
+                </div>
+              </div>
+              <!-- QR placeholder -->
+              <div style="display:flex;align-items:center;gap:16px">
+                <div id="hero-qr" style="width:72px;height:72px;background:white;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#666;overflow:hidden"></div>
+                <div>
+                  <div style="font-size:12px;opacity:0.7">Scan for emergency access</div>
+                  <div style="font-size:11px;opacity:0.5;margin-top:2px">HIPAA · ISO 27001 Compliant</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Floating info cards -->
+            <div style="background:rgba(0,200,83,0.9);border-radius:14px;padding:14px 18px;margin-top:-20px;margin-left:24px;display:inline-flex;align-items:center;gap:10px;box-shadow:0 8px 24px rgba(0,200,83,0.3)">
+              <span style="font-size:20px">🤖</span>
+              <div><div style="font-size:12px;font-weight:700;color:white">AI Summary Ready</div><div style="font-size:11px;color:rgba(255,255,255,0.8)">3 records processed</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4 Feature Preview Cards -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-20">
+        <div class="glass rounded-2xl p-5 text-center" data-aos="fade-up" data-aos-delay="0">
+          <div style="font-size:32px;margin-bottom:8px">🪪</div>
+          <div style="font-weight:700;color:#fff;font-size:15px">Health ID</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:4px">Unique digital identity for every patient</div>
+        </div>
+        <div class="glass rounded-2xl p-5 text-center" data-aos="fade-up" data-aos-delay="100">
+          <div style="font-size:32px;margin-bottom:8px">📲</div>
+          <div style="font-weight:700;color:#fff;font-size:15px">QR Access</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:4px">Instant records via QR scan</div>
+        </div>
+        <div class="glass rounded-2xl p-5 text-center" data-aos="fade-up" data-aos-delay="200">
+          <div style="font-size:32px;margin-bottom:8px">🤖</div>
+          <div style="font-weight:700;color:#fff;font-size:15px">AI Summaries</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:4px">Complex history in plain language</div>
+        </div>
+        <div class="glass rounded-2xl p-5 text-center" data-aos="fade-up" data-aos-delay="300">
+          <div style="font-size:32px;margin-bottom:8px">🚨</div>
+          <div style="font-weight:700;color:#fff;font-size:15px">Emergency Mode</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:4px">Critical info without login</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIVE DEMO STRIP -->
+  <section style="background:linear-gradient(135deg,#0066CC,#00C853);padding:20px 0;overflow:hidden">
+    <div style="display:flex;gap:48px;animation:marquee 25s linear infinite;white-space:nowrap">
+      <span style="color:rgba(255,255,255,0.9);font-size:14px;font-weight:600" class="flex items-center gap-2">✅ HIPAA Compliant</span>
+      <span style="color:rgba(255,255,255,0.9);font-size:14px;font-weight:600">🔐 End-to-End Encrypted</span>
+      <span style="color:rgba(255,255,255,0.9);font-size:14px;font-weight:600">🌐 Cross-Hospital Sharing</span>
+      <span style="color:rgba(255,255,255,0.9);font-size:14px;font-weight:600">🤖 AI-Powered Insights</span>
+      <span style="color:rgba(255,255,255,0.9);font-size:14px;font-weight:600">📱 Mobile First Design</span>
+      <span style="color:rgba(255,255,255,0.9);font-size:14px;font-weight:600">⚡ Real-Time Updates</span>
+      <span style="color:rgba(255,255,255,0.9);font-size:14px;font-weight:600">✅ HIPAA Compliant</span>
+      <span style="color:rgba(255,255,255,0.9);font-size:14px;font-weight:600">🔐 End-to-End Encrypted</span>
+      <span style="color:rgba(255,255,255,0.9);font-size:14px;font-weight:600">🌐 Cross-Hospital Sharing</span>
+      <span style="color:rgba(255,255,255,0.9);font-size:14px;font-weight:600">🤖 AI-Powered Insights</span>
+    </div>
+  </section>
+  <style>@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}</style>
+
+  <!-- FOOTER -->
+  <footer style="background:var(--card);border-top:1px solid var(--border);padding:48px 24px 24px">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid md:grid-cols-4 gap-8 mb-8">
+        <div>
+          <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:20px;margin-bottom:12px;color:var(--text)">MEDLINK<span class="grad">-AI</span></div>
+          <p style="font-size:14px;color:var(--sub);line-height:1.6">One Digital Health ID. Lifetime Medical History Access. Built for India's healthcare future.</p>
+        </div>
+        <div>
+          <div style="font-weight:700;margin-bottom:12px;font-size:14px;color:var(--text)">Platform</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <button onclick="showPage('features')" style="text-align:left;font-size:14px;color:var(--sub);background:none;border:none;cursor:pointer">Features</button>
+            <button onclick="showPage('howitworks')" style="text-align:left;font-size:14px;color:var(--sub);background:none;border:none;cursor:pointer">How It Works</button>
+            <button onclick="showPage('techstack')" style="text-align:left;font-size:14px;color:var(--sub);background:none;border:none;cursor:pointer">Tech Stack</button>
+          </div>
+        </div>
+        <div>
+          <div style="font-weight:700;margin-bottom:12px;font-size:14px;color:var(--text)">Access</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <button onclick="openLogin('patient')" style="text-align:left;font-size:14px;color:var(--sub);background:none;border:none;cursor:pointer">Patient Portal</button>
+            <button onclick="openLogin('doctor')" style="text-align:left;font-size:14px;color:var(--sub);background:none;border:none;cursor:pointer">Doctor Portal</button>
+            <button onclick="openLogin('admin')" style="text-align:left;font-size:14px;color:var(--sub);background:none;border:none;cursor:pointer">Admin Panel</button>
+          </div>
+        </div>
+        <div>
+          <div style="font-weight:700;margin-bottom:12px;font-size:14px;color:var(--text)">Contact</div>
+          <div style="font-size:14px;color:var(--sub);line-height:1.8">
+            📧 team@medlink.ai<br>
+            🐙 <a href="https://github.com" target="_blank" style="color:var(--p)">GitHub/medlink-ai</a><br>
+            📍 India 🇮🇳
+          </div>
+        </div>
+      </div>
+      <div style="border-top:1px solid var(--border);padding-top:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:gap;font-size:13px;color:var(--sub)">
+        <span>© 2024 MEDLINK-AI. Built for Hackathon Demo.</span>
+        <span>Made with ❤️ in India</span>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ========================================================= -->
+<!-- PAGE: FEATURES -->
+<!-- ========================================================= -->
+<div id="page-features" class="page">
+  <div style="padding-top:80px">
+    <!-- Header -->
+    <section style="padding:60px 24px 40px;text-align:center;background:linear-gradient(135deg,rgba(0,102,204,0.05),rgba(0,200,83,0.05))">
+      <div class="badge badge-blue mb-4" style="display:inline-flex">⚡ Platform Features</div>
+      <h1 style="font-size:clamp(2rem,4vw,3.2rem);margin-bottom:16px;color:var(--text)">Everything You Need in<br><span class="grad">One Health Ecosystem</span></h1>
+      <p style="font-size:18px;color:var(--sub);max-width:560px;margin:auto">8 powerful features designed to transform how India manages its healthcare data.</p>
+    </section>
+
+    <!-- 8 Features Grid -->
+    <section class="max-w-7xl mx-auto px-6 py-16">
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        <div class="feat-card" data-aos="fade-up" data-aos-delay="0">
+          <div class="icon-box mb-4" style="background:rgba(0,102,204,0.1)"><span style="font-size:26px">🪪</span></div>
+          <h3 style="font-size:20px;font-weight:700;margin-bottom:8px;color:var(--text)">Unique Health ID</h3>
+          <p style="color:var(--sub);font-size:15px;line-height:1.65">Every patient gets a unique, government-grade digital health identifier (MED-XXXX-XXXX) linked to their complete medical timeline — portable across all hospitals and clinics in India.</p>
+          <div class="flex gap-2 mt-4 flex-wrap">
+            <span class="badge badge-blue">UUID-based</span><span class="badge badge-green">Portable</span>
+          </div>
+        </div>
+
+        <div class="feat-card" data-aos="fade-up" data-aos-delay="80">
+          <div class="icon-box mb-4" style="background:rgba(0,200,83,0.1)"><span style="font-size:26px">📲</span></div>
+          <h3 style="font-size:20px;font-weight:700;margin-bottom:8px;color:var(--text)">QR Access System</h3>
+          <p style="color:var(--sub);font-size:15px;line-height:1.65">Generate and scan QR codes to instantly pull up a patient's medical summary. Emergency rooms can access critical information — blood type, allergies, medications — without login in under 3 seconds.</p>
+          <div class="flex gap-2 mt-4 flex-wrap">
+            <span class="badge badge-green">Instant</span><span class="badge badge-orange">Emergency Ready</span>
+          </div>
+        </div>
+
+        <div class="feat-card" data-aos="fade-up" data-aos-delay="160">
+          <div class="icon-box mb-4" style="background:rgba(130,100,255,0.1)"><span style="font-size:26px">🤖</span></div>
+          <h3 style="font-size:20px;font-weight:700;margin-bottom:8px;color:var(--text)">AI Medical Summaries</h3>
+          <p style="color:var(--sub);font-size:15px;line-height:1.65">Our AI engine (powered by Google Gemini) reads complex discharge notes, lab results, and prescriptions — then generates plain-language summaries for both patients and doctors to review instantly.</p>
+          <div class="flex gap-2 mt-4 flex-wrap">
+            <span class="badge badge-blue">Gemini AI</span><span class="badge badge-green">Plain Language</span>
+          </div>
+        </div>
+
+        <div class="feat-card" data-aos="fade-up" data-aos-delay="240">
+          <div class="icon-box mb-4" style="background:rgba(255,150,0,0.1)"><span style="font-size:26px">🔍</span></div>
+          <h3 style="font-size:20px;font-weight:700;margin-bottom:8px;color:var(--text)">OCR Prescription Digitization</h3>
+          <p style="color:var(--sub);font-size:15px;line-height:1.65">Upload a photo of any handwritten or printed prescription. Our OCR engine (Google Vision API) extracts medicine names, dosages, and frequencies — storing them digitally in seconds.</p>
+          <div class="flex gap-2 mt-4 flex-wrap">
+            <span class="badge badge-orange">Google Vision</span><span class="badge badge-blue">Auto-Extract</span>
+          </div>
+        </div>
+
+        <div class="feat-card" data-aos="fade-up" data-aos-delay="320">
+          <div class="icon-box mb-4" style="background:rgba(220,38,38,0.1)"><span style="font-size:26px">🔒</span></div>
+          <h3 style="font-size:20px;font-weight:700;margin-bottom:8px;color:var(--text)">Patient Data Control</h3>
+          <p style="color:var(--sub);font-size:15px;line-height:1.65">You decide who sees what. Grant time-limited access to specific doctors, revoke permissions instantly, and get notified of every access event. Your health data, your rules.</p>
+          <div class="flex gap-2 mt-4 flex-wrap">
+            <span class="badge badge-red">HIPAA</span><span class="badge badge-blue">Consent-Based</span>
+          </div>
+        </div>
+
+        <div class="feat-card" data-aos="fade-up" data-aos-delay="400">
+          <div class="icon-box mb-4" style="background:rgba(220,38,38,0.08)"><span style="font-size:26px">🚨</span></div>
+          <h3 style="font-size:20px;font-weight:700;margin-bottom:8px;color:var(--text)">Emergency Access Mode</h3>
+          <p style="color:var(--sub);font-size:15px;line-height:1.65">When seconds count, emergency responders can scan the patient QR and see critical vitals — blood type, allergies, current medications, and emergency contacts — with no login required.</p>
+          <div class="flex gap-2 mt-4 flex-wrap">
+            <span class="badge badge-red">No Login</span><span class="badge badge-orange">Life-Saving</span>
+          </div>
+        </div>
+
+        <div class="feat-card" data-aos="fade-up" data-aos-delay="480">
+          <div class="icon-box mb-4" style="background:rgba(0,102,204,0.1)"><span style="font-size:26px">🏥</span></div>
+          <h3 style="font-size:20px;font-weight:700;margin-bottom:8px;color:var(--text)">Cross-Hospital Sharing</h3>
+          <p style="color:var(--sub);font-size:15px;line-height:1.65">Seamlessly share medical records between hospitals, clinics, and specialists. No more carrying physical folders — your complete history follows you to any registered healthcare provider.</p>
+          <div class="flex gap-2 mt-4 flex-wrap">
+            <span class="badge badge-blue">Interoperable</span><span class="badge badge-green">FHIR Ready</span>
+          </div>
+        </div>
+
+        <div class="feat-card" data-aos="fade-up" data-aos-delay="560">
+          <div class="icon-box mb-4" style="background:rgba(0,200,83,0.1)"><span style="font-size:26px">💊</span></div>
+          <h3 style="font-size:20px;font-weight:700;margin-bottom:8px;color:var(--text)">Digital Prescriptions</h3>
+          <p style="color:var(--sub);font-size:15px;line-height:1.65">Doctors issue digital prescriptions directly in the platform. Patients receive them instantly on their dashboard, pharmacy-verified with a QR code. Zero paper, zero loss, zero errors.</p>
+          <div class="flex gap-2 mt-4 flex-wrap">
+            <span class="badge badge-green">Verified</span><span class="badge badge-blue">Pharmacy QR</span>
+          </div>
+        </div>
+
+        <!-- CTA card -->
+        <div class="feat-card" data-aos="fade-up" data-aos-delay="640" style="background:linear-gradient(135deg,#0066CC,#00C853);border:none;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;min-height:240px">
+          <div style="font-size:40px;margin-bottom:12px">🚀</div>
+          <h3 style="font-size:22px;font-weight:700;color:#fff;margin-bottom:8px">Try the Demo</h3>
+          <p style="color:rgba(255,255,255,0.8);font-size:14px;margin-bottom:20px">Experience MEDLINK-AI live with full feature access</p>
+          <button class="btn-primary" onclick="openLogin('patient')" style="background:rgba(255,255,255,0.2);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.4)">Launch Demo →</button>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- ========================================================= -->
+<!-- PAGE: HOW IT WORKS -->
+<!-- ========================================================= -->
+<div id="page-howitworks" class="page">
+  <div style="padding-top:80px">
+    <section style="padding:60px 24px 40px;text-align:center;background:linear-gradient(135deg,rgba(0,102,204,0.05),rgba(0,200,83,0.05))">
+      <div class="badge badge-blue mb-4" style="display:inline-flex">🔄 Workflow</div>
+      <h1 style="font-size:clamp(2rem,4vw,3.2rem);margin-bottom:16px;color:var(--text)">How MEDLINK-AI<br><span class="grad">Works in 5 Phases</span></h1>
+      <p style="font-size:18px;color:var(--sub);max-width:560px;margin:auto">From first registration to AI-powered consultation — here's the complete patient journey.</p>
+    </section>
+
+    <section class="max-w-4xl mx-auto px-6 py-16">
+      <!-- Phase 1 -->
+      <div class="tl-line" style="position:relative">
+        <div style="position:relative;padding-left:80px;margin-bottom:64px" data-aos="fade-right">
+          <div style="position:absolute;left:0;top:0;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#0066CC,#0052a3);display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 8px 20px rgba(0,102,204,0.35)">1️⃣</div>
+          <div style="position:absolute;left:27px;top:56px;bottom:-64px;width:2px;background:linear-gradient(to bottom,#0066CC,#004499)"></div>
+          <div class="feat-card" style="margin-left:16px">
+            <div class="flex items-center gap-3 mb-4">
+              <span style="font-size:28px">📝</span>
+              <div>
+                <h3 style="font-size:20px;font-weight:700;color:var(--text)">Phase 1: Registration & Health ID Generation</h3>
+                <span class="badge badge-blue" style="font-size:12px">Onboarding</span>
+              </div>
+            </div>
+            <p style="color:var(--sub);font-size:15px;line-height:1.7">Patient signs up with basic details (name, DOB, Aadhaar/phone). The system auto-generates a <strong>unique Health ID</strong> (MED-YEAR-XXXX format) and creates a QR code. Auth0 handles secure authentication — no password stored in plaintext.</p>
+            <div style="margin-top:16px;padding:16px;background:rgba(0,102,204,0.05);border-radius:12px;font-family:monospace;font-size:13px;color:var(--p)">
+              POST /api/register → { healthId: "MED-2024-7829", qrToken: "eyJ..." }
+            </div>
+          </div>
+        </div>
+
+        <!-- Phase 2 -->
+        <div style="position:relative;padding-left:80px;margin-bottom:64px" data-aos="fade-right" data-aos-delay="100">
+          <div style="position:absolute;left:0;top:0;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#0052a3,#003380);display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 8px 20px rgba(0,102,204,0.3)">2️⃣</div>
+          <div style="position:absolute;left:27px;top:56px;bottom:-64px;width:2px;background:linear-gradient(to bottom,#004499,#009e42)"></div>
+          <div class="feat-card" style="margin-left:16px">
+            <div class="flex items-center gap-3 mb-4">
+              <span style="font-size:28px">🗂️</span>
+              <div>
+                <h3 style="font-size:20px;font-weight:700;color:var(--text)">Phase 2: Medical Profile Setup</h3>
+                <span class="badge badge-green" style="font-size:12px">Profile</span>
+              </div>
+            </div>
+            <p style="color:var(--sub);font-size:15px;line-height:1.7">Patient uploads existing records (PDF reports, X-rays, prescriptions). <strong>Google Cloud Vision OCR</strong> extracts text from images. AI engine categorizes documents and populates the structured health profile — blood group, allergies, chronic conditions, medications.</p>
+            <div class="grid grid-cols-3 gap-3 mt-4">
+              <div style="padding:10px;background:rgba(0,200,83,0.08);border-radius:10px;text-align:center;font-size:13px;color:var(--sub)">📄 PDFs</div>
+              <div style="padding:10px;background:rgba(0,200,83,0.08);border-radius:10px;text-align:center;font-size:13px;color:var(--sub)">🖼️ Images</div>
+              <div style="padding:10px;background:rgba(0,200,83,0.08);border-radius:10px;text-align:center;font-size:13px;color:var(--sub)">💊 Rx</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Phase 3 -->
+        <div style="position:relative;padding-left:80px;margin-bottom:64px" data-aos="fade-right" data-aos-delay="200">
+          <div style="position:absolute;left:0;top:0;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#009e42,#007a33);display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 8px 20px rgba(0,200,83,0.3)">3️⃣</div>
+          <div style="position:absolute;left:27px;top:56px;bottom:-64px;width:2px;background:linear-gradient(to bottom,#009e42,#00C853)"></div>
+          <div class="feat-card" style="margin-left:16px">
+            <div class="flex items-center gap-3 mb-4">
+              <span style="font-size:28px">🔐</span>
+              <div>
+                <h3 style="font-size:20px;font-weight:700;color:var(--text)">Phase 3: Consent & Access Control</h3>
+                <span class="badge badge-red" style="font-size:12px">Security</span>
+              </div>
+            </div>
+            <p style="color:var(--sub);font-size:15px;line-height:1.7">Patient grants access to specific doctors with <strong>time-limited tokens</strong>. Every access event is logged immutably. Emergency QR bypasses login but only reveals critical info — not full history. All data encrypted at rest with AES-256.</p>
+            <div style="margin-top:16px;padding:16px;background:rgba(220,38,38,0.05);border:1px solid rgba(220,38,38,0.15);border-radius:12px">
+              <div style="font-size:13px;font-weight:600;color:#dc2626;margin-bottom:8px">🔒 Access Layers</div>
+              <div style="display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--sub)">
+                <div>Layer 1: Patient (full access)</div>
+                <div>Layer 2: Authorized Doctor (partial, time-limited)</div>
+                <div>Layer 3: Emergency (blood type + allergies only)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Phase 4 -->
+        <div style="position:relative;padding-left:80px;margin-bottom:64px" data-aos="fade-right" data-aos-delay="300">
+          <div style="position:absolute;left:0;top:0;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#00C853,#009e42);display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 8px 20px rgba(0,200,83,0.3)">4️⃣</div>
+          <div style="position:absolute;left:27px;top:56px;bottom:-64px;width:2px;background:linear-gradient(to bottom,#00C853,#0066CC)"></div>
+          <div class="feat-card" style="margin-left:16px">
+            <div class="flex items-center gap-3 mb-4">
+              <span style="font-size:28px">🏥</span>
+              <div>
+                <h3 style="font-size:20px;font-weight:700;color:var(--text)">Phase 4: Doctor Consultation & AI Summary</h3>
+                <span class="badge badge-blue" style="font-size:12px">AI-Powered</span>
+              </div>
+            </div>
+            <p style="color:var(--sub);font-size:15px;line-height:1.7">Doctor scans QR or searches by Health ID. AI generates a <strong>3-minute summary</strong> of the patient's entire history. Doctor can update prescriptions, add consultation notes, or upload new reports. All changes sync to patient dashboard instantly.</p>
+            <div style="margin-top:16px;padding:16px;background:rgba(130,100,255,0.06);border-radius:12px;font-size:13px;color:var(--sub)">
+              🤖 AI Summary: "Patient has Type 2 Diabetes (diagnosed 2019), currently on Metformin 500mg. Last HbA1c: 7.2% (Aug 2024). No known drug allergies. Recommended: Continue current medication, schedule 3-month follow-up."
+            </div>
+          </div>
+        </div>
+
+        <!-- Phase 5 -->
+        <div style="position:relative;padding-left:80px" data-aos="fade-right" data-aos-delay="400">
+          <div style="position:absolute;left:0;top:0;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#0066CC,#00C853);display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 8px 20px rgba(0,102,204,0.35)">5️⃣</div>
+          <div class="feat-card" style="margin-left:16px" style="border:2px solid rgba(0,200,83,0.3)">
+            <div class="flex items-center gap-3 mb-4">
+              <span style="font-size:28px">🔄</span>
+              <div>
+                <h3 style="font-size:20px;font-weight:700;color:var(--text)">Phase 5: Continuous Sync & Security Audit</h3>
+                <span class="badge badge-green" style="font-size:12px">Ongoing</span>
+              </div>
+            </div>
+            <p style="color:var(--sub);font-size:15px;line-height:1.7">All updates sync in real-time via Google Cloud Pub/Sub. Automated anomaly detection flags unusual access patterns. Monthly security reports delivered to patient. Compliance audits ensure HIPAA, ISO 27001 standards are continuously met.</p>
+            <div class="grid grid-cols-3 gap-3 mt-4">
+              <div style="padding:12px;background:rgba(0,102,204,0.06);border-radius:10px;text-align:center">
+                <div style="font-size:20px;margin-bottom:4px">⚡</div>
+                <div style="font-size:12px;color:var(--sub)">Real-time Sync</div>
+              </div>
+              <div style="padding:12px;background:rgba(0,200,83,0.06);border-radius:10px;text-align:center">
+                <div style="font-size:20px;margin-bottom:4px">🛡️</div>
+                <div style="font-size:12px;color:var(--sub)">Auto Audit</div>
+              </div>
+              <div style="padding:12px;background:rgba(220,38,38,0.06);border-radius:10px;text-align:center">
+                <div style="font-size:20px;margin-bottom:4px">📊</div>
+                <div style="font-size:12px;color:var(--sub)">Reports</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- ========================================================= -->
+<!-- PAGE: TECH STACK -->
+<!-- ========================================================= -->
+<div id="page-techstack" class="page">
+  <div style="padding-top:80px">
+    <section style="padding:60px 24px 40px;text-align:center;background:linear-gradient(135deg,rgba(0,102,204,0.05),rgba(0,200,83,0.05))">
+      <div class="badge badge-blue mb-4" style="display:inline-flex">🏗️ Architecture</div>
+      <h1 style="font-size:clamp(2rem,4vw,3.2rem);margin-bottom:16px;color:var(--text)">Built on a<br><span class="grad">Modern Stack</span></h1>
+      <p style="font-size:18px;color:var(--sub);max-width:560px;margin:auto">Enterprise-grade architecture designed for scale, security, and speed.</p>
+    </section>
+
+    <section class="max-w-6xl mx-auto px-6 py-12">
+      <!-- Architecture Diagram -->
+      <div class="feat-card mb-12" data-aos="fade-up">
+        <h2 style="font-size:22px;font-weight:700;margin-bottom:24px;color:var(--text);text-align:center">System Architecture</h2>
+        <div style="overflow-x:auto">
+          <svg viewBox="0 0 900 400" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:600px;max-width:900px;display:block;margin:auto">
+            <defs>
+              <linearGradient id="gBlue" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#0066CC"/><stop offset="100%" style="stop-color:#004499"/></linearGradient>
+              <linearGradient id="gGreen" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#00C853"/><stop offset="100%" style="stop-color:#007a33"/></linearGradient>
+              <linearGradient id="gPurp" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#7c3aed"/><stop offset="100%" style="stop-color:#4c1d95"/></linearGradient>
+              <linearGradient id="gOrange" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#ea580c"/><stop offset="100%" style="stop-color:#9a3412"/></linearGradient>
+              <marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#0066CC"/></marker>
+            </defs>
+
+            <!-- Client Layer -->
+            <rect x="20" y="30" width="160" height="80" rx="14" fill="url(#gBlue)"/>
+            <text x="100" y="62" text-anchor="middle" fill="white" font-size="13" font-weight="bold" font-family="Syne">⚛️ React</text>
+            <text x="100" y="80" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="11" font-family="DM Sans">Frontend</text>
+            <text x="100" y="98" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="10" font-family="DM Sans">Tailwind + Auth0</text>
+
+            <!-- Arrow 1 -->
+            <line x1="180" y1="70" x2="230" y2="70" stroke="#0066CC" stroke-width="2" marker-end="url(#arrow)"/>
+            <text x="205" y="62" text-anchor="middle" fill="#0066CC" font-size="10" font-family="DM Sans">HTTPS</text>
+
+            <!-- API Layer -->
+            <rect x="230" y="30" width="160" height="80" rx="14" fill="url(#gGreen)"/>
+            <text x="310" y="62" text-anchor="middle" fill="white" font-size="13" font-weight="bold" font-family="Syne">🐍 Flask API</text>
+            <text x="310" y="80" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="11" font-family="DM Sans">REST Backend</text>
+            <text x="310" y="98" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="10" font-family="DM Sans">JWT Auth · Rate Limit</text>
+
+            <!-- Arrow 2 -->
+            <line x1="390" y1="70" x2="440" y2="70" stroke="#00C853" stroke-width="2" marker-end="url(#arrow)" stroke-dasharray="5,3"/>
+            <text x="415" y="62" text-anchor="middle" fill="#00C853" font-size="10" font-family="DM Sans">Query</text>
+
+            <!-- DB Layer -->
+            <rect x="440" y="30" width="160" height="80" rx="14" fill="url(#gPurp)"/>
+            <text x="520" y="62" text-anchor="middle" fill="white" font-size="13" font-weight="bold" font-family="Syne">🗄️ MySQL</text>
+            <text x="520" y="80" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="11" font-family="DM Sans">Primary Database</text>
+            <text x="520" y="98" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="10" font-family="DM Sans">Encrypted at Rest</text>
+
+            <!-- Arrow 3 -->
+            <line x1="600" y1="70" x2="650" y2="70" stroke="#7c3aed" stroke-width="2" marker-end="url(#arrow)"/>
+
+            <!-- Cloud Layer -->
+            <rect x="650" y="30" width="160" height="80" rx="14" fill="url(#gOrange)"/>
+            <text x="730" y="55" text-anchor="middle" fill="white" font-size="11" font-weight="bold" font-family="Syne">☁️ Google Cloud</text>
+            <text x="730" y="73" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="10" font-family="DM Sans">Storage · Vision · Pub/Sub</text>
+            <text x="730" y="91" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="10" font-family="DM Sans">CDN · Cloud Run</text>
+
+            <!-- AI Engine (bottom) -->
+            <rect x="310" y="200" width="280" height="100" rx="14" fill="url(#gBlue)" opacity="0.9"/>
+            <text x="450" y="232" text-anchor="middle" fill="white" font-size="13" font-weight="bold" font-family="Syne">🤖 AI Engine</text>
+            <text x="450" y="253" text-anchor="middle" fill="rgba(255,255,255,0.85)" font-size="11" font-family="DM Sans">Gemini · OCR · NLP Summarizer</text>
+            <text x="450" y="273" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="10" font-family="DM Sans">Drug Interaction Checker · Anomaly Detection</text>
+            <text x="450" y="290" text-anchor="middle" fill="rgba(255,255,255,0.65)" font-size="10" font-family="DM Sans">Prescription Parser · Health Risk Scoring</text>
+
+            <!-- Auth0 (bottom left) -->
+            <rect x="20" y="200" width="260" height="100" rx="14" fill="#EB5424" opacity="0.9"/>
+            <text x="150" y="245" text-anchor="middle" fill="white" font-size="13" font-weight="bold" font-family="Syne">🔐 Auth0</text>
+            <text x="150" y="265" text-anchor="middle" fill="rgba(255,255,255,0.85)" font-size="11" font-family="DM Sans">SSO · MFA · OAuth 2.0</text>
+            <text x="150" y="283" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="10" font-family="DM Sans">RBAC · Token Management</text>
+
+            <!-- Security (bottom right) -->
+            <rect x="620" y="200" width="260" height="100" rx="14" fill="#1e293b" opacity="0.9"/>
+            <text x="750" y="245" text-anchor="middle" fill="white" font-size="13" font-weight="bold" font-family="Syne">🛡️ Security Layer</text>
+            <text x="750" y="265" text-anchor="middle" fill="rgba(255,255,255,0.85)" font-size="11" font-family="DM Sans">AES-256 · TLS 1.3</text>
+            <text x="750" y="283" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="10" font-family="DM Sans">HIPAA · ISO 27001 · WAF</text>
+
+            <!-- Connecting lines -->
+            <line x1="310" y1="110" x2="310" y2="200" stroke="#0066CC" stroke-width="1.5" stroke-dasharray="6,3"/>
+            <line x1="150" y1="110" x2="150" y2="200" stroke="#EB5424" stroke-width="1.5" stroke-dasharray="6,3"/>
+            <line x1="730" y1="110" x2="730" y2="200" stroke="#ea580c" stroke-width="1.5" stroke-dasharray="6,3"/>
+            <line x1="450" y1="110" x2="450" y2="200" stroke="#00C853" stroke-width="1.5" stroke-dasharray="6,3"/>
+            
+            <!-- Labels -->
+            <text x="450" y="370" text-anchor="middle" fill="#0066CC" font-size="12" font-family="DM Sans" opacity="0.7">All communications encrypted · HIPAA Compliant · SOC 2 Type II</text>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Tech Logos Grid -->
+      <h2 style="font-size:22px;font-weight:700;margin-bottom:24px;color:var(--text);text-align:center" data-aos="fade-up">Technology Stack</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-12">
+        <div class="feat-card text-center" data-aos="fade-up" data-aos-delay="0" style="padding:20px">
+          <div style="font-size:36px;margin-bottom:8px">⚛️</div>
+          <div style="font-weight:700;font-size:14px;color:var(--text)">React 18</div>
+          <div style="font-size:12px;color:var(--sub)">Frontend UI</div>
+        </div>
+        <div class="feat-card text-center" data-aos="fade-up" data-aos-delay="60" style="padding:20px">
+          <div style="font-size:36px;margin-bottom:8px">🐍</div>
+          <div style="font-weight:700;font-size:14px;color:var(--text)">Flask</div>
+          <div style="font-size:12px;color:var(--sub)">REST API</div>
+        </div>
+        <div class="feat-card text-center" data-aos="fade-up" data-aos-delay="120" style="padding:20px">
+          <div style="font-size:36px;margin-bottom:8px">🗄️</div>
+          <div style="font-weight:700;font-size:14px;color:var(--text)">MySQL 8</div>
+          <div style="font-size:12px;color:var(--sub)">Database</div>
+        </div>
+        <div class="feat-card text-center" data-aos="fade-up" data-aos-delay="180" style="padding:20px">
+          <div style="font-size:36px;margin-bottom:8px">☁️</div>
+          <div style="font-weight:700;font-size:14px;color:var(--text)">GCP</div>
+          <div style="font-size:12px;color:var(--sub)">Cloud</div>
+        </div>
+        <div class="feat-card text-center" data-aos="fade-up" data-aos-delay="240" style="padding:20px">
+          <div style="font-size:36px;margin-bottom:8px">🔐</div>
+          <div style="font-weight:700;font-size:14px;color:var(--text)">Auth0</div>
+          <div style="font-size:12px;color:var(--sub)">Identity</div>
+        </div>
+        <div class="feat-card text-center" data-aos="fade-up" data-aos-delay="300" style="padding:20px">
+          <div style="font-size:36px;margin-bottom:8px">🤖</div>
+          <div style="font-weight:700;font-size:14px;color:var(--text)">Gemini AI</div>
+          <div style="font-size:12px;color:var(--sub)">AI Engine</div>
+        </div>
+      </div>
+
+      <!-- Metrics -->
+      <div class="grid md:grid-cols-4 gap-6" data-aos="fade-up">
+        <div class="stat-card text-center"><div style="font-size:32px;font-weight:800;font-family:'Syne',sans-serif" class="grad">99.9%</div><div style="color:var(--sub);font-size:14px;margin-top:4px">Uptime SLA</div></div>
+        <div class="stat-card text-center"><div style="font-size:32px;font-weight:800;font-family:'Syne',sans-serif" class="grad">&lt;200ms</div><div style="color:var(--sub);font-size:14px;margin-top:4px">API Response</div></div>
+        <div class="stat-card text-center"><div style="font-size:32px;font-weight:800;font-family:'Syne',sans-serif" class="grad">AES-256</div><div style="color:var(--sub);font-size:14px;margin-top:4px">Encryption</div></div>
+        <div class="stat-card text-center"><div style="font-size:32px;font-weight:800;font-family:'Syne',sans-serif" class="grad">HIPAA</div><div style="color:var(--sub);font-size:14px;margin-top:4px">Compliant</div></div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- ========================================================= -->
+<!-- PAGE: TEAM & CONTACT -->
+<!-- ========================================================= -->
+<div id="page-team" class="page">
+  <div style="padding-top:80px">
+    <section style="padding:60px 24px 40px;text-align:center;background:linear-gradient(135deg,rgba(0,102,204,0.05),rgba(0,200,83,0.05))">
+      <div class="badge badge-green mb-4" style="display:inline-flex">👥 Our Team</div>
+      <h1 style="font-size:clamp(2rem,4vw,3.2rem);margin-bottom:16px;color:var(--text)">The Minds Behind<br><span class="grad">MEDLINK-AI</span></h1>
+      <p style="font-size:18px;color:var(--sub);max-width:560px;margin:auto">A passionate team of engineers and designers solving India's healthcare data crisis.</p>
+    </section>
+
+    <section class="max-w-6xl mx-auto px-6 py-12">
+      <!-- Team Cards -->
+      <div class="grid md:grid-cols-3 lg:grid-cols-4 gap-6 mb-16">
+        <div class="feat-card text-center" data-aos="fade-up">
+          <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#0066CC,#00C853);display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 16px">👨‍💻</div>
+          <h3 style="font-weight:700;font-size:17px;color:var(--text)">Arjun Mehta</h3>
+          <p style="color:var(--p);font-size:13px;font-weight:600;margin-bottom:8px">Full-Stack Lead</p>
+          <p style="color:var(--sub);font-size:13px">React, Flask, MySQL architecture & deployment</p>
+          <a href="https://github.com" target="_blank" class="badge badge-blue mt-3" style="display:inline-flex">🐙 GitHub</a>
+        </div>
+        <div class="feat-card text-center" data-aos="fade-up" data-aos-delay="80">
+          <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#0066CC);display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 16px">👩‍🔬</div>
+          <h3 style="font-weight:700;font-size:17px;color:var(--text)">Priya Iyer</h3>
+          <p style="color:var(--p);font-size:13px;font-weight:600;margin-bottom:8px">AI/ML Engineer</p>
+          <p style="color:var(--sub);font-size:13px">Gemini integration, NLP, OCR pipeline</p>
+          <a href="https://github.com" target="_blank" class="badge badge-blue mt-3" style="display:inline-flex">🐙 GitHub</a>
+        </div>
+        <div class="feat-card text-center" data-aos="fade-up" data-aos-delay="160">
+          <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#00C853,#0066CC);display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 16px">🎨</div>
+          <h3 style="font-weight:700;font-size:17px;color:var(--text)">Ravi Kumar</h3>
+          <p style="color:var(--p);font-size:13px;font-weight:600;margin-bottom:8px">UI/UX Designer</p>
+          <p style="color:var(--sub);font-size:13px">Design system, accessibility, mobile UX</p>
+          <a href="https://github.com" target="_blank" class="badge badge-blue mt-3" style="display:inline-flex">🐙 GitHub</a>
+        </div>
+        <div class="feat-card text-center" data-aos="fade-up" data-aos-delay="240">
+          <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#ea580c,#0066CC);display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 16px">🛡️</div>
+          <h3 style="font-weight:700;font-size:17px;color:var(--text)">Sneha Patil</h3>
+          <p style="color:var(--p);font-size:13px;font-weight:600;margin-bottom:8px">DevSecOps</p>
+          <p style="color:var(--sub);font-size:13px">Cloud infrastructure, security, CI/CD</p>
+          <a href="https://github.com" target="_blank" class="badge badge-blue mt-3" style="display:inline-flex">🐙 GitHub</a>
+        </div>
+      </div>
+
+      <!-- GitHub + Demo -->
+      <div class="grid md:grid-cols-2 gap-8 mb-12">
+        <div class="feat-card" style="background:linear-gradient(135deg,#24292e,#1a1e24);border:none" data-aos="fade-right">
+          <div style="font-size:48px;margin-bottom:16px">🐙</div>
+          <h3 style="font-size:22px;font-weight:700;color:white;margin-bottom:8px">Open on GitHub</h3>
+          <p style="color:rgba(255,255,255,0.7);font-size:15px;margin-bottom:20px;line-height:1.6">Full source code, documentation, API references, and deployment guides available on GitHub.</p>
+          <a href="https://github.com" target="_blank" class="btn-primary" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);text-decoration:none">⭐ Star on GitHub</a>
+        </div>
+        <div class="feat-card" style="background:linear-gradient(135deg,#0066CC,#00C853);border:none" data-aos="fade-left">
+          <div style="font-size:48px;margin-bottom:16px">📅</div>
+          <h3 style="font-size:22px;font-weight:700;color:white;margin-bottom:8px">Book a Demo</h3>
+          <p style="color:rgba(255,255,255,0.8);font-size:15px;margin-bottom:20px;line-height:1.6">Schedule a live walkthrough with our team and see MEDLINK-AI in action for your hospital or clinic.</p>
+          <button onclick="showDemoForm()" class="btn-primary" style="background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.4)">📅 Book Now</button>
+        </div>
+      </div>
+
+      <!-- Contact Form -->
+      <div class="feat-card max-w-2xl mx-auto" data-aos="fade-up" id="demo-form">
+        <h2 style="font-size:22px;font-weight:700;margin-bottom:8px;color:var(--text)">Get in Touch</h2>
+        <p style="color:var(--sub);font-size:15px;margin-bottom:24px">Drop us a message or book a demo session</p>
+        <div class="grid md:grid-cols-2 gap-4 mb-4">
+          <div><label class="field-label">Your Name</label><input class="field" type="text" placeholder="Rahul Sharma"></div>
+          <div><label class="field-label">Email</label><input class="field" type="email" placeholder="you@example.com"></div>
+        </div>
+        <div class="mb-4"><label class="field-label">Organization</label><input class="field" type="text" placeholder="Hospital / Clinic / Startup"></div>
+        <div class="mb-4"><label class="field-label">Message</label><textarea class="field" rows="4" placeholder="Tell us about your use case..."></textarea></div>
+        <button onclick="submitContact()" class="btn-primary w-full" style="justify-content:center">📨 Send Message</button>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- ========================================================= -->
+<!-- PATIENT DASHBOARD -->
+<!-- ========================================================= -->
+<div id="dash-patient" class="dash-view">
+  <div class="sidebar" id="patient-sidebar">
+    <div style="padding:20px 20px 8px;border-bottom:1px solid var(--border);margin-bottom:8px">
+      <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:17px;color:var(--text)">MEDLINK<span class="grad">-AI</span></div>
+      <div style="font-size:12px;color:var(--sub);margin-top:2px">Patient Portal</div>
+    </div>
+    <div id="pt-user-info" style="padding:16px 20px;margin-bottom:8px">
+      <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#0066CC,#00C853);display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:8px">🧑</div>
+      <div style="font-weight:600;font-size:15px;color:var(--text)" id="pt-name-sidebar">Rahul Sharma</div>
+      <div style="font-size:12px;color:var(--sub)" id="pt-hid-sidebar">MED-2024-7829</div>
+    </div>
+    <div class="side-item active" onclick="showPatientTab('overview')" data-tab="overview"><span>📊</span> Overview</div>
+    <div class="side-item" onclick="showPatientTab('healthid')" data-tab="healthid"><span>🪪</span> Health ID & QR</div>
+    <div class="side-item" onclick="showPatientTab('reports')" data-tab="reports"><span>📁</span> My Reports</div>
+    <div class="side-item" onclick="showPatientTab('prescriptions')" data-tab="prescriptions"><span>💊</span> Prescriptions</div>
+    <div class="side-item" onclick="showPatientTab('aisummary')" data-tab="aisummary"><span>🤖</span> AI Summary</div>
+    <div class="side-item" onclick="showPatientTab('profile')" data-tab="profile"><span>👤</span> Profile</div>
+    <div style="margin-top:auto;padding:20px"><button onclick="logout()" class="btn-outline w-full" style="justify-content:center;padding:10px;font-size:14px">🚪 Logout</button></div>
+  </div>
+  <div class="dash-main">
+    <!-- OVERVIEW TAB -->
+    <div id="pt-tab-overview" class="patient-tab">
+      <div class="flex items-center justify-between mb-6 flex-wrap gap-3">
+        <div>
+          <h1 style="font-size:26px;font-weight:700;color:var(--text)" id="pt-welcome">Good morning, Rahul! 👋</h1>
+          <p style="color:var(--sub);font-size:14px">Your health dashboard — updated in real time</p>
+        </div>
+        <button onclick="showPatientTab('reports')" class="btn-accent" style="padding:10px 20px;font-size:14px">📤 Upload Report</button>
+      </div>
+      <!-- Stats -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div class="stat-card text-center"><div style="font-size:28px;font-weight:800;font-family:'Syne',sans-serif;color:#0066CC" id="pt-doc-count">3</div><div style="font-size:13px;color:var(--sub);margin-top:4px">Reports</div></div>
+        <div class="stat-card text-center"><div style="font-size:28px;font-weight:800;font-family:'Syne',sans-serif;color:#00C853" id="pt-rx-count">2</div><div style="font-size:13px;color:var(--sub);margin-top:4px">Prescriptions</div></div>
+        <div class="stat-card text-center"><div style="font-size:28px;font-weight:800;font-family:'Syne',sans-serif;color:#7c3aed">B+</div><div style="font-size:13px;color:var(--sub);margin-top:4px">Blood Type</div></div>
+        <div class="stat-card text-center"><div style="font-size:28px;font-weight:800;font-family:'Syne',sans-serif;color:#ea580c">98.6°F</div><div style="font-size:13px;color:var(--sub);margin-top:4px">Last Temp</div></div>
+      </div>
+      <!-- Recent Activity + Prescriptions -->
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="feat-card">
+          <h3 style="font-weight:700;margin-bottom:16px;color:var(--text)">Recent Activity</h3>
+          <div id="pt-activity-list">
+            <div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:14px"><div style="width:8px;height:8px;border-radius:50%;background:#00C853;margin-top:6px;flex-shrink:0"></div><div><div style="font-size:14px;font-weight:600;color:var(--text)">CBC Report uploaded</div><div style="font-size:12px;color:var(--sub)">Today, 10:32 AM</div></div></div>
+            <div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:14px"><div style="width:8px;height:8px;border-radius:50%;background:#0066CC;margin-top:6px;flex-shrink:0"></div><div><div style="font-size:14px;font-weight:600;color:var(--text)">Dr. Priya updated prescription</div><div style="font-size:12px;color:var(--sub)">Yesterday, 3:15 PM</div></div></div>
+            <div style="display:flex;gap:12px;align-items:flex-start"><div style="width:8px;height:8px;border-radius:50%;background:#7c3aed;margin-top:6px;flex-shrink:0"></div><div><div style="font-size:14px;font-weight:600;color:var(--text)">AI Summary generated</div><div style="font-size:12px;color:var(--sub)">2 days ago</div></div></div>
+          </div>
+        </div>
+        <div class="feat-card">
+          <h3 style="font-weight:700;margin-bottom:16px;color:var(--text)">Current Medications</h3>
+          <div id="pt-current-meds"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HEALTH ID TAB -->
+    <div id="pt-tab-healthid" class="patient-tab" style="display:none">
+      <h1 style="font-size:26px;font-weight:700;color:var(--text);margin-bottom:6px">Health ID & QR Code</h1>
+      <p style="color:var(--sub);font-size:14px;margin-bottom:28px">Your unique digital health identity — present at any hospital</p>
+      <div class="grid md:grid-cols-2 gap-8 max-w-3xl">
+        <!-- Health ID Card -->
+        <div style="background:linear-gradient(135deg,#0066CC,#004499);border-radius:20px;padding:28px;color:white">
+          <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:16px;margin-bottom:20px">MEDLINK-AI HEALTH CARD</div>
+          <div style="margin-bottom:16px">
+            <div style="font-size:11px;opacity:0.6;text-transform:uppercase;letter-spacing:1px">Health ID</div>
+            <div style="font-size:20px;font-weight:700;letter-spacing:2px;font-family:'Syne',sans-serif" id="hid-display">MED-2024-7829</div>
+          </div>
+          <div class="grid grid-cols-2 gap-3 mb-6" id="hid-details"></div>
+          <button onclick="downloadQR()" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:white;padding:8px 16px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer">⬇️ Download QR</button>
+        </div>
+        <!-- QR Code -->
+        <div class="feat-card text-center">
+          <h3 style="font-weight:700;margin-bottom:16px;color:var(--text)">Your QR Code</h3>
+          <div id="qr-container" style="display:flex;justify-content:center;margin-bottom:16px"></div>
+          <p style="font-size:13px;color:var(--sub)">Scan for emergency access to critical info</p>
+          <div class="badge badge-green mt-3" style="display:inline-flex">🔒 Secure Token</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- REPORTS TAB -->
+    <div id="pt-tab-reports" class="patient-tab" style="display:none">
+      <h1 style="font-size:26px;font-weight:700;color:var(--text);margin-bottom:6px">My Medical Reports</h1>
+      <p style="color:var(--sub);font-size:14px;margin-bottom:24px">Upload and manage your test reports, X-rays, discharge summaries</p>
+      <!-- Upload Zone -->
+      <div class="upload-zone mb-6" id="upload-zone" onclick="triggerFileUpload()">
+        <div style="font-size:40px;margin-bottom:12px">📤</div>
+        <h3 style="font-weight:700;font-size:17px;color:var(--text);margin-bottom:4px">Drop files here or click to upload</h3>
+        <p style="font-size:14px;color:var(--sub)">Supports PDF, JPG, PNG — up to 10MB per file</p>
+        <input type="file" id="report-file-input" style="display:none" multiple accept=".pdf,.jpg,.jpeg,.png" onchange="handleFileUpload(event)">
+      </div>
+      <!-- Reports list -->
+      <div id="pt-reports-list"></div>
+    </div>
+
+    <!-- PRESCRIPTIONS TAB -->
+    <div id="pt-tab-prescriptions" class="patient-tab" style="display:none">
+      <h1 style="font-size:26px;font-weight:700;color:var(--text);margin-bottom:6px">My Prescriptions</h1>
+      <p style="color:var(--sub);font-size:14px;margin-bottom:24px">Digital prescriptions issued by your doctors — updated in real time</p>
+      <div id="pt-prescriptions-list"></div>
+    </div>
+
+    <!-- AI SUMMARY TAB -->
+    <div id="pt-tab-aisummary" class="patient-tab" style="display:none">
+      <h1 style="font-size:26px;font-weight:700;color:var(--text);margin-bottom:6px">AI Medical Summary</h1>
+      <p style="color:var(--sub);font-size:14px;margin-bottom:24px">Get an AI-generated plain-language summary of your health history</p>
+      <div class="feat-card max-w-2xl mb-6">
+        <h3 style="font-weight:700;margin-bottom:12px;color:var(--text)">🤖 Generate AI Summary</h3>
+        <p style="font-size:14px;color:var(--sub);margin-bottom:16px">Paste medical text (discharge note, lab result) or click Generate to summarize your profile</p>
+        <textarea id="ai-input" class="field" rows="5" placeholder="Paste medical text here, or leave blank to summarize your profile..."></textarea>
+        <button onclick="generateAISummary()" class="btn-primary mt-3" id="ai-btn">🤖 Generate Summary</button>
+      </div>
+      <div id="ai-output-section" style="display:none" class="feat-card max-w-2xl">
+        <div class="flex items-center gap-2 mb-3"><span style="font-size:20px">🤖</span><h3 style="font-weight:700;color:var(--text)">AI Health Summary</h3><span class="badge badge-green">Generated</span></div>
+        <div id="ai-output" style="font-size:15px;color:var(--text);line-height:1.8"></div>
+        <div style="margin-top:16px;padding:12px;background:rgba(0,102,204,0.06);border-radius:10px;font-size:12px;color:var(--sub)">⚠️ This AI summary is for informational purposes only. Always consult your doctor for medical decisions.</div>
+      </div>
+    </div>
+
+    <!-- PROFILE TAB -->
+    <div id="pt-tab-profile" class="patient-tab" style="display:none">
+      <h1 style="font-size:26px;font-weight:700;color:var(--text);margin-bottom:6px">My Profile</h1>
+      <p style="color:var(--sub);font-size:14px;margin-bottom:24px">Your personal health information</p>
+      <div class="feat-card max-w-2xl" id="pt-profile-card"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========================================================= -->
+<!-- DOCTOR DASHBOARD -->
+<!-- ========================================================= -->
+<div id="dash-doctor" class="dash-view">
+  <div class="sidebar">
+    <div style="padding:20px 20px 8px;border-bottom:1px solid var(--border);margin-bottom:8px">
+      <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:17px;color:var(--text)">MEDLINK<span class="grad">-AI</span></div>
+      <div style="font-size:12px;color:var(--sub);margin-top:2px">Doctor Portal</div>
+    </div>
+    <div style="padding:16px 20px;margin-bottom:8px">
+      <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#00C853,#0066CC);display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:8px">👨‍⚕️</div>
+      <div style="font-weight:600;font-size:15px;color:var(--text)" id="dr-name-sidebar">Dr. Priya Mehta</div>
+      <div style="font-size:12px;color:var(--sub)">Cardiologist</div>
+    </div>
+    <div class="side-item active" onclick="showDoctorTab('overview')" data-tab="overview"><span>📊</span> Dashboard</div>
+    <div class="side-item" onclick="showDoctorTab('patients')" data-tab="patients"><span>👥</span> My Patients</div>
+    <div class="side-item" onclick="showDoctorTab('prescriptions')" data-tab="prescriptions"><span>💊</span> Write Prescription</div>
+    <div class="side-item" onclick="showDoctorTab('schedule')" data-tab="schedule"><span>📅</span> Schedule</div>
+    <div style="margin-top:auto;padding:20px"><button onclick="logout()" class="btn-outline w-full" style="justify-content:center;padding:10px;font-size:14px">🚪 Logout</button></div>
+  </div>
+  <div class="dash-main">
+    <!-- Doctor Overview -->
+    <div id="dr-tab-overview" class="doctor-tab">
+      <div class="flex items-center justify-between mb-6 flex-wrap gap-3">
+        <div>
+          <h1 style="font-size:26px;font-weight:700;color:var(--text)" id="dr-welcome">Good morning, Dr. Mehta! 👋</h1>
+          <p style="color:var(--sub);font-size:14px">Your patient dashboard</p>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div class="stat-card text-center"><div style="font-size:28px;font-weight:800;font-family:'Syne',sans-serif;color:#0066CC">12</div><div style="font-size:13px;color:var(--sub);margin-top:4px">Patients</div></div>
+        <div class="stat-card text-center"><div style="font-size:28px;font-weight:800;font-family:'Syne',sans-serif;color:#00C853">5</div><div style="font-size:13px;color:var(--sub);margin-top:4px">Today's Appts</div></div>
+        <div class="stat-card text-center"><div style="font-size:28px;font-weight:800;font-family:'Syne',sans-serif;color:#7c3aed">8</div><div style="font-size:13px;color:var(--sub);margin-top:4px">Rx Issued</div></div>
+        <div class="stat-card text-center"><div style="font-size:28px;font-weight:800;font-family:'Syne',sans-serif;color:#ea580c">2</div><div style="font-size:13px;color:var(--sub);margin-top:4px">Alerts</div></div>
+      </div>
+      <div class="feat-card">
+        <h3 style="font-weight:700;margin-bottom:16px;color:var(--text)">Today's Appointments</h3>
+        <table class="data-table"><thead><tr><th>Patient</th><th>Health ID</th><th>Time</th><th>Status</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr><td>Rahul Sharma</td><td class="font-mono text-sm" style="color:var(--p)">MED-2024-7829</td><td>9:00 AM</td><td><span class="badge badge-green">Seen</span></td><td><button onclick="showDoctorTab('prescriptions');preSelectPatient('P001')" class="badge badge-blue" style="cursor:pointer">💊 Prescribe</button></td></tr>
+          <tr><td>Anjali Rao</td><td class="font-mono text-sm" style="color:var(--p)">MED-2024-8134</td><td>10:30 AM</td><td><span class="badge badge-orange">Waiting</span></td><td><button onclick="showDoctorTab('prescriptions');preSelectPatient('P002')" class="badge badge-blue" style="cursor:pointer">💊 Prescribe</button></td></tr>
+          <tr><td>Vikram Singh</td><td class="font-mono text-sm" style="color:var(--p)">MED-2024-5621</td><td>2:00 PM</td><td><span class="badge badge-blue">Scheduled</span></td><td><button onclick="showDoctorTab('prescriptions');preSelectPatient('P003')" class="badge badge-blue" style="cursor:pointer">💊 Prescribe</button></td></tr>
+        </tbody></table>
+      </div>
+    </div>
+
+    <!-- Patients Tab -->
+    <div id="dr-tab-patients" class="doctor-tab" style="display:none">
+      <h1 style="font-size:26px;font-weight:700;color:var(--text);margin-bottom:6px">My Patients</h1>
+      <p style="color:var(--sub);font-size:14px;margin-bottom:24px">All patients under your care</p>
+      <div class="feat-card responsive-table"><table class="data-table" id="dr-patients-table">
+        <thead><tr><th>Patient</th><th>Health ID</th><th>Blood</th><th>Last Visit</th><th>Status</th><th>Action</th></tr></thead>
+        <tbody id="dr-patients-body"></tbody>
+      </table></div>
+    </div>
+
+    <!-- Prescription Tab -->
+    <div id="dr-tab-prescriptions" class="doctor-tab" style="display:none">
+      <h1 style="font-size:26px;font-weight:700;color:var(--text);margin-bottom:6px">Write Prescription</h1>
+      <p style="color:var(--sub);font-size:14px;margin-bottom:24px">Updates directly to patient's profile in real time</p>
+      <div class="feat-card max-w-2xl">
+        <div class="mb-4">
+          <label class="field-label">Select Patient</label>
+          <select class="field" id="rx-patient-select">
+            <option value="">-- Select Patient --</option>
+          </select>
+        </div>
+        <div id="rx-patient-preview" style="display:none;margin-bottom:16px;padding:14px;background:rgba(0,102,204,0.06);border-radius:12px;font-size:14px;color:var(--sub)"></div>
+        <div id="rx-medicines-section">
+          <label class="field-label">Medicines</label>
+          <div id="rx-med-list"></div>
+          <button onclick="addRxMed()" class="btn-outline mt-3" style="padding:8px 16px;font-size:14px">+ Add Medicine</button>
+        </div>
+        <div class="mt-4 mb-4">
+          <label class="field-label">Diagnosis / Notes</label>
+          <textarea class="field" id="rx-notes" rows="3" placeholder="Diagnosis, follow-up instructions..."></textarea>
+        </div>
+        <div class="mb-4">
+          <label class="field-label">Valid Until</label>
+          <input type="date" class="field" id="rx-valid-until">
+        </div>
+        <button onclick="submitPrescription()" class="btn-primary w-full" style="justify-content:center">💊 Issue Prescription → Patient Profile</button>
+        <div id="rx-success" style="display:none;margin-top:16px;padding:14px;background:rgba(0,200,83,0.1);border:1px solid rgba(0,200,83,0.3);border-radius:12px;color:#00a844;font-size:14px;font-weight:600">✅ Prescription issued and synced to patient profile!</div>
+      </div>
+    </div>
+
+    <!-- Schedule Tab -->
+    <div id="dr-tab-schedule" class="doctor-tab" style="display:none">
+      <h1 style="font-size:26px;font-weight:700;color:var(--text);margin-bottom:6px">My Schedule</h1>
+      <p style="color:var(--sub);font-size:14px;margin-bottom:24px">Upcoming appointments</p>
+      <div class="feat-card">
+        <div id="dr-schedule-list"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========================================================= -->
+<!-- ADMIN DASHBOARD -->
+<!-- ========================================================= -->
+<div id="dash-admin" class="dash-view">
+  <div class="sidebar">
+    <div style="padding:20px 20px 8px;border-bottom:1px solid var(--border);margin-bottom:8px">
+      <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:17px;color:var(--text)">MEDLINK<span class="grad">-AI</span></div>
+      <div style="font-size:12px;color:var(--sub);margin-top:2px">Admin Panel</div>
+    </div>
+    <div style="padding:16px 20px;margin-bottom:8px">
+      <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#ea580c,#0066CC);display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:8px">🔐</div>
+      <div style="font-weight:600;font-size:15px;color:var(--text)">System Admin</div>
+      <div style="font-size:12px;color:var(--sub)">Full Access</div>
+    </div>
+    <div class="side-item active" onclick="showAdminTab('overview')" data-tab="overview"><span>📊</span> Overview</div>
+    <div class="side-item" onclick="showAdminTab('patients')" data-tab="patients"><span>🧑</span> All Patients</div>
+    <div class="side-item" onclick="showAdminTab('doctors')" data-tab="doctors"><span>👨‍⚕️</span> All Doctors</div>
+    <div class="side-item" onclick="showAdminTab('analytics')" data-tab="analytics"><span>📈</span> Analytics</div>
+    <div style="margin-top:auto;padding:20px"><button onclick="logout()" class="btn-outline w-full" style="justify-content:center;padding:10px;font-size:14px">🚪 Logout</button></div>
+  </div>
+  <div class="dash-main">
+    <!-- Admin Overview -->
+    <div id="ad-tab-overview" class="admin-tab">
+      <h1 style="font-size:26px;font-weight:700;color:var(--text);margin-bottom:6px">Admin Dashboard</h1>
+      <p style="color:var(--sub);font-size:14px;margin-bottom:24px">System-wide overview — full access</p>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div class="stat-card text-center"><div style="font-size:28px;font-weight:800;font-family:'Syne',sans-serif;color:#0066CC" id="adm-pt-count">—</div><div style="font-size:13px;color:var(--sub);margin-top:4px">Patients</div></div>
+        <div class="stat-card text-center"><div style="font-size:28px;font-weight:800;font-family:'Syne',sans-serif;color:#00C853" id="adm-dr-count">—</div><div style="font-size:13px;color:var(--sub);margin-top:4px">Doctors</div></div>
+        <div class="stat-card text-center"><div style="font-size:28px;font-weight:800;font-family:'Syne',sans-serif;color:#7c3aed" id="adm-rx-count">—</div><div style="font-size:13px;color:var(--sub);margin-top:4px">Prescriptions</div></div>
+        <div class="stat-card text-center"><div style="font-size:28px;font-weight:800;font-family:'Syne',sans-serif;color:#ea580c" id="adm-rpt-count">—</div><div style="font-size:13px;color:var(--sub);margin-top:4px">Reports</div></div>
+      </div>
+      <div class="feat-card">
+        <h3 style="font-weight:700;margin-bottom:16px;color:var(--text)">Recent System Events</h3>
+        <div id="adm-events-list"></div>
+      </div>
+    </div>
+
+    <!-- All Patients -->
+    <div id="ad-tab-patients" class="admin-tab" style="display:none">
+      <h1 style="font-size:26px;font-weight:700;color:var(--text);margin-bottom:6px">All Patients</h1>
+      <p style="color:var(--sub);font-size:14px;margin-bottom:24px">Complete patient registry</p>
+      <div class="feat-card responsive-table"><table class="data-table">
+        <thead><tr><th>Name</th><th>Health ID</th><th>Blood</th><th>DOB</th><th>Conditions</th><th>Status</th></tr></thead>
+        <tbody id="adm-patients-body"></tbody>
+      </table></div>
+    </div>
+
+    <!-- All Doctors -->
+    <div id="ad-tab-doctors" class="admin-tab" style="display:none">
+      <h1 style="font-size:26px;font-weight:700;color:var(--text);margin-bottom:6px">All Doctors</h1>
+      <p style="color:var(--sub);font-size:14px;margin-bottom:24px">Registered medical staff</p>
+      <div class="feat-card responsive-table"><table class="data-table">
+        <thead><tr><th>Name</th><th>Specialty</th><th>Hospital</th><th>Patients</th><th>Status</th></tr></thead>
+        <tbody id="adm-doctors-body"></tbody>
+      </table></div>
+    </div>
+
+    <!-- Analytics -->
+    <div id="ad-tab-analytics" class="admin-tab" style="display:none">
+      <h1 style="font-size:26px;font-weight:700;color:var(--text);margin-bottom:6px">Platform Analytics</h1>
+      <p style="color:var(--sub);font-size:14px;margin-bottom:24px">System performance metrics</p>
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="feat-card text-center"><div style="font-size:36px;font-weight:800;font-family:'Syne',sans-serif" class="grad">99.9%</div><div style="color:var(--sub);margin-top:4px">Platform Uptime</div></div>
+        <div class="feat-card text-center"><div style="font-size:36px;font-weight:800;font-family:'Syne',sans-serif" class="grad">187ms</div><div style="color:var(--sub);margin-top:4px">Avg API Response</div></div>
+        <div class="feat-card text-center"><div style="font-size:36px;font-weight:800;font-family:'Syne',sans-serif" class="grad">0</div><div style="color:var(--sub);margin-top:4px">Security Breaches</div></div>
+        <div class="feat-card text-center"><div style="font-size:36px;font-weight:800;font-family:'Syne',sans-serif;color:#00C853">2.3s</div><div style="color:var(--sub);margin-top:4px">Avg QR Access Time</div></div>
+        <div class="feat-card text-center"><div style="font-size:36px;font-weight:800;font-family:'Syne',sans-serif;color:#0066CC">96%</div><div style="color:var(--sub);margin-top:4px">OCR Accuracy</div></div>
+        <div class="feat-card text-center"><div style="font-size:36px;font-weight:800;font-family:'Syne',sans-serif;color:#7c3aed">HIPAA ✓</div><div style="color:var(--sub);margin-top:4px">Compliance Status</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========================================================= -->
+<!-- LOGIN MODAL -->
+<!-- ========================================================= -->
+<div id="login-modal" class="modal-bg">
+  <div class="modal-box" style="max-width:440px">
+    <button onclick="closeModal('login-modal')" style="position:absolute;top:16px;right:16px;background:none;border:none;font-size:24px;cursor:pointer;color:var(--sub)">✕</button>
+    <h2 style="font-size:24px;font-weight:700;color:var(--text);margin-bottom:6px">Welcome Back</h2>
+    <p style="color:var(--sub);font-size:14px;margin-bottom:24px">Login to your MEDLINK-AI portal</p>
+    <!-- Tabs -->
+    <div class="flex gap-2 mb-6 p-1" style="background:rgba(0,102,204,0.06);border-radius:12px">
+      <button class="tab-btn active flex-1" id="tab-patient" onclick="switchLoginTab('patient')">🧑‍⚕️ Patient</button>
+      <button class="tab-btn flex-1" id="tab-doctor" onclick="switchLoginTab('doctor')">👨‍⚕️ Doctor</button>
+      <button class="tab-btn flex-1" id="tab-admin" onclick="switchLoginTab('admin')">🔐 Admin</button>
+    </div>
+    <div id="login-hint" style="font-size:13px;color:var(--sub);background:rgba(0,102,204,0.06);border-radius:10px;padding:10px 14px;margin-bottom:16px"></div>
+    <div class="mb-4"><label class="field-label">Email</label><input class="field" type="email" id="login-email" placeholder="your@email.com"></div>
+    <div class="mb-6"><label class="field-label">Password</label><input class="field" type="password" id="login-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
+    <button onclick="doLogin()" class="btn-primary w-full" style="justify-content:center">🚀 Login</button>
+    <div style="text-align:center;margin-top:16px;font-size:14px;color:var(--sub)">Don't have an account? <button onclick="closeModal('login-modal');openRegister()" style="color:var(--p);font-weight:600;background:none;border:none;cursor:pointer">Register free</button></div>
+  </div>
+</div>
+
+<!-- ========================================================= -->
+<!-- REGISTER MODAL -->
+<!-- ========================================================= -->
+<div id="register-modal" class="modal-bg">
+  <div class="modal-box" style="max-width:500px;max-height:90vh;overflow-y:auto">
+    <button onclick="closeModal('register-modal')" style="position:absolute;top:16px;right:16px;background:none;border:none;font-size:24px;cursor:pointer;color:var(--sub)">✕</button>
+    <h2 style="font-size:24px;font-weight:700;color:var(--text);margin-bottom:6px">Create Account</h2>
+    <p style="color:var(--sub);font-size:14px;margin-bottom:24px">Join MEDLINK-AI and get your Digital Health ID</p>
+    <div class="flex gap-2 mb-6 p-1" style="background:rgba(0,102,204,0.06);border-radius:12px">
+      <button class="tab-btn active flex-1" id="reg-tab-patient" onclick="switchRegTab('patient')">🧑‍⚕️ Patient</button>
+      <button class="tab-btn flex-1" id="reg-tab-doctor" onclick="switchRegTab('doctor')">👨‍⚕️ Doctor</button>
+    </div>
+    <div class="grid grid-cols-2 gap-4 mb-4">
+      <div><label class="field-label">Full Name</label><input class="field" type="text" id="reg-name" placeholder="Rahul Sharma"></div>
+      <div><label class="field-label">Date of Birth</label><input class="field" type="date" id="reg-dob"></div>
+    </div>
+    <div class="mb-4"><label class="field-label">Email</label><input class="field" type="email" id="reg-email" placeholder="you@example.com"></div>
+    <div class="mb-4"><label class="field-label">Phone</label><input class="field" type="tel" id="reg-phone" placeholder="+91 9800000000"></div>
+    <!-- Patient-only fields -->
+    <div id="reg-patient-fields">
+      <div class="grid grid-cols-2 gap-4 mb-4">
+        <div><label class="field-label">Blood Group</label>
+          <select class="field" id="reg-blood"><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>O+</option><option>O-</option><option>AB+</option><option>AB-</option></select>
+        </div>
+        <div><label class="field-label">Allergies</label><input class="field" type="text" id="reg-allergies" placeholder="Penicillin, None..."></div>
+      </div>
+      <div class="mb-4"><label class="field-label">Chronic Conditions</label><input class="field" type="text" id="reg-conditions" placeholder="Diabetes, Hypertension, None..."></div>
+    </div>
+    <!-- Doctor-only fields -->
+    <div id="reg-doctor-fields" style="display:none">
+      <div class="grid grid-cols-2 gap-4 mb-4">
+        <div><label class="field-label">Specialization</label><input class="field" type="text" id="reg-specialty" placeholder="Cardiology"></div>
+        <div><label class="field-label">License No.</label><input class="field" type="text" id="reg-license" placeholder="MCI-XXXX"></div>
+      </div>
+      <div class="mb-4"><label class="field-label">Hospital / Clinic</label><input class="field" type="text" id="reg-hospital" placeholder="AIIMS Delhi"></div>
+    </div>
+    <div class="mb-4"><label class="field-label">Password</label><input class="field" type="password" id="reg-pass" placeholder="Min 6 characters"></div>
+    <button onclick="doRegister()" class="btn-accent w-full" style="justify-content:center">✨ Create Account & Get Health ID</button>
+    <div style="text-align:center;margin-top:16px;font-size:14px;color:var(--sub)">Already registered? <button onclick="closeModal('register-modal');openLogin('patient')" style="color:var(--p);font-weight:600;background:none;border:none;cursor:pointer">Login here</button></div>
+  </div>
+</div>
+
+<!-- ========================================================= -->
+<!-- JAVASCRIPT -->
+<!-- ========================================================= -->
+<script>
+// ====== STATE & DB ======
+let currentRole = null;
+let currentUser = null;
+let regType = 'patient';
+let loginRole = 'patient';
+
+// Seed DB in localStorage
+function initDB() {
+  if (!localStorage.getItem('ml_patients')) {
+    const patients = [
+      { id:'P001', name:'Rahul Sharma', email:'patient@demo.com', pass:'demo123', phone:'+91-9823456789', dob:'1990-05-15', blood:'B+', allergies:'Penicillin', conditions:'Type 2 Diabetes', healthId:'MED-2024-7829', active:true,
+        reports:[
+          {id:'R1', name:'CBC Blood Test', date:'2024-10-20', type:'PDF', size:'1.2 MB'},
+          {id:'R2', name:'Chest X-Ray', date:'2024-09-15', type:'Image', size:'3.4 MB'},
+          {id:'R3', name:'ECG Report', date:'2024-08-02', type:'PDF', size:'0.8 MB'}
+        ],
+        prescriptions:[
+          {id:'RX1', doctor:'Dr. Priya Mehta', date:'2024-10-19', medicines:[{name:'Metformin 500mg',dose:'1 tab',freq:'Twice daily',duration:'30 days'},{name:'Atorvastatin 10mg',dose:'1 tab',freq:'Once at night',duration:'30 days'}], notes:'Continue diet control. Reduce sugar intake.', valid:'2024-11-19'},
+          {id:'RX2', doctor:'Dr. Priya Mehta', date:'2024-09-10', medicines:[{name:'Aspirin 75mg',dose:'1 tab',freq:'Once daily',duration:'60 days'}], notes:'Take after breakfast.', valid:'2024-11-10'}
+        ]
+      },
+      { id:'P002', name:'Anjali Rao', email:'anjali@demo.com', pass:'demo123', phone:'+91-9911223344', dob:'1985-11-22', blood:'A+', allergies:'None', conditions:'Hypertension', healthId:'MED-2024-8134', active:true, reports:[], prescriptions:[] },
+      { id:'P003', name:'Vikram Singh', email:'vikram@demo.com', pass:'demo123', phone:'+91-9744556677', dob:'1978-03-08', blood:'O+', allergies:'Sulfa drugs', conditions:'Asthma', healthId:'MED-2024-5621', active:true, reports:[], prescriptions:[] }
+    ];
+    localStorage.setItem('ml_patients', JSON.stringify(patients));
+  }
+  if (!localStorage.getItem('ml_doctors')) {
+    const doctors = [
+      { id:'D001', name:'Dr. Priya Mehta', email:'doctor@demo.com', pass:'demo123', specialty:'Cardiology', license:'MCI-4521', hospital:'Apollo Hospital Delhi', patients:12 },
+      { id:'D002', name:'Dr. Arjun Iyer', email:'arjun@demo.com', pass:'demo123', specialty:'Neurology', license:'MCI-7823', hospital:'Fortis Hospital', patients:8 }
+    ];
+    localStorage.setItem('ml_doctors', JSON.stringify(doctors));
+  }
+  if (!localStorage.getItem('ml_admins')) {
+    localStorage.setItem('ml_admins', JSON.stringify([{ id:'A001', name:'Admin', email:'admin@demo.com', pass:'admin123' }]));
+  }
+}
+
+function getPatients() { return JSON.parse(localStorage.getItem('ml_patients') || '[]'); }
+function getDoctors() { return JSON.parse(localStorage.getItem('ml_doctors') || '[]'); }
+function getAdmins() { return JSON.parse(localStorage.getItem('ml_admins') || '[]'); }
+function savePatients(p) { localStorage.setItem('ml_patients', JSON.stringify(p)); }
+function saveDoctors(d) { localStorage.setItem('ml_doctors', JSON.stringify(d)); }
+
+// ====== NAVBAR ======
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 10);
+});
+
+function toggleDark() {
+  document.documentElement.classList.toggle('dark');
+  document.getElementById('dark-btn').textContent = document.documentElement.classList.contains('dark') ? '☀️' : '🌙';
+}
+
+function toggleLoginMenu() {
+  const m = document.getElementById('login-menu');
+  m.classList.toggle('hidden');
+}
+document.addEventListener('click', e => {
+  const wrap = document.getElementById('login-dropdown-wrap');
+  if (wrap && !wrap.contains(e.target)) document.getElementById('login-menu').classList.add('hidden');
+});
+
+function toggleMobileMenu() {
+  const m = document.getElementById('mobile-menu');
+  const b = document.getElementById('ham-btn');
+  m.classList.toggle('hidden');
+  b.classList.toggle('open');
+}
+function closeMobileMenu() {
+  document.getElementById('mobile-menu').classList.add('hidden');
+  document.getElementById('ham-btn').classList.remove('open');
+}
+
+// ====== PAGE ROUTING ======
+function showPage(pageId) {
+  // Hide all dashboards
+  document.querySelectorAll('.dash-view').forEach(d => d.classList.remove('active'));
+  currentRole = null;
+  // Show pages
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const pg = document.getElementById('page-' + pageId);
+  if (pg) { pg.classList.add('active'); window.scrollTo(0,0); }
+  document.querySelectorAll('[data-page]').forEach(l => {
+    l.classList.toggle('active', l.dataset.page === pageId);
+  });
+  document.getElementById('navbar').style.display = '';
+  document.getElementById('login-menu').classList.add('hidden');
+}
+
+// ====== MODALS ======
+function openLogin(role) {
+  loginRole = role;
+  switchLoginTab(role);
+  document.getElementById('login-modal').classList.add('open');
+  document.getElementById('login-menu').classList.add('hidden');
+}
+function openRegister() {
+  document.getElementById('register-modal').classList.add('open');
+  document.getElementById('login-menu').classList.add('hidden');
+}
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-bg').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
+});
+
+function switchLoginTab(role) {
+  loginRole = role;
+  ['patient','doctor','admin'].forEach(r => {
+    document.getElementById('tab-'+r).classList.toggle('active', r===role);
+  });
+  const hints = {
+    patient: '🧑‍⚕️ Demo: patient@demo.com / demo123',
+    doctor: '👨‍⚕️ Demo: doctor@demo.com / demo123',
+    admin: '🔐 Demo: admin@demo.com / admin123'
+  };
+  document.getElementById('login-hint').textContent = hints[role];
+  const presets = {
+    patient: ['patient@demo.com','demo123'],
+    doctor: ['doctor@demo.com','demo123'],
+    admin: ['admin@demo.com','admin123']
+  };
+  document.getElementById('login-email').value = presets[role][0];
+  document.getElementById('login-pass').value = presets[role][1];
+}
+
+function switchRegTab(type) {
+  regType = type;
+  ['patient','doctor'].forEach(t => {
+    document.getElementById('reg-tab-'+t).classList.toggle('active', t===type);
+  });
+  document.getElementById('reg-patient-fields').style.display = type==='patient'?'':'none';
+  document.getElementById('reg-doctor-fields').style.display = type==='doctor'?'':'none';
+}
+
+// ====== AUTH ======
+function doLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const pass = document.getElementById('login-pass').value.trim();
+  if (!email || !pass) { notify('⚠️', 'Please enter email and password'); return; }
+  if (loginRole === 'patient') {
+    const user = getPatients().find(p => p.email===email && p.pass===pass);
+    if (!user) { notify('❌', 'Invalid credentials'); return; }
+    currentUser = user; currentRole = 'patient';
+    closeModal('login-modal');
+    loadPatientDash();
+  } else if (loginRole === 'doctor') {
+    const user = getDoctors().find(d => d.email===email && d.pass===pass);
+    if (!user) { notify('❌', 'Invalid credentials'); return; }
+    currentUser = user; currentRole = 'doctor';
+    closeModal('login-modal');
+    loadDoctorDash();
+  } else {
+    const user = getAdmins().find(a => a.email===email && a.pass===pass);
+    if (!user) { notify('❌', 'Invalid credentials'); return; }
+    currentUser = user; currentRole = 'admin';
+    closeModal('login-modal');
+    loadAdminDash();
+  }
+}
+
+function doRegister() {
+  const name = document.getElementById('reg-name').value.trim();
+  const email = document.getElementById('reg-email').value.trim();
+  const pass = document.getElementById('reg-pass').value.trim();
+  const dob = document.getElementById('reg-dob').value;
+  const phone = document.getElementById('reg-phone').value.trim();
+  if (!name||!email||!pass||!dob) { notify('⚠️', 'Please fill all required fields'); return; }
+  if (pass.length < 6) { notify('⚠️', 'Password must be at least 6 characters'); return; }
+
+  if (regType === 'patient') {
+    const pts = getPatients();
+    if (pts.find(p => p.email===email)) { notify('❌', 'Email already registered'); return; }
+    const blood = document.getElementById('reg-blood').value;
+    const allergies = document.getElementById('reg-allergies').value || 'None';
+    const conditions = document.getElementById('reg-conditions').value || 'None';
+    const year = new Date().getFullYear();
+    const rand = Math.floor(Math.random()*9000)+1000;
+    const healthId = `MED-${year}-${rand}`;
+    const newPt = { id:'P'+Date.now(), name, email, pass, phone, dob, blood, allergies, conditions, healthId, active:true, reports:[], prescriptions:[] };
+    pts.push(newPt);
+    savePatients(pts);
+    currentUser = newPt; currentRole = 'patient';
+    closeModal('register-modal');
+    notify('✅', `Welcome ${name}! Health ID: ${healthId}`);
+    setTimeout(loadPatientDash, 600);
+  } else {
+    const docs = getDoctors();
+    if (docs.find(d => d.email===email)) { notify('❌', 'Email already registered'); return; }
+    const specialty = document.getElementById('reg-specialty').value;
+    const license = document.getElementById('reg-license').value;
+    const hospital = document.getElementById('reg-hospital').value;
+    const newDoc = { id:'D'+Date.now(), name, email, pass, specialty, license, hospital, patients:0 };
+    docs.push(newDoc);
+    saveDoctors(docs);
+    currentUser = newDoc; currentRole = 'doctor';
+    closeModal('register-modal');
+    notify('✅', `Welcome Dr. ${name}!`);
+    setTimeout(loadDoctorDash, 600);
+  }
+}
+
+function logout() {
+  currentUser = null; currentRole = null;
+  document.querySelectorAll('.dash-view').forEach(d => d.classList.remove('active'));
+  showPage('home');
+  notify('👋', 'Logged out successfully');
+}
+
+// ====== PATIENT DASHBOARD ======
+function loadPatientDash() {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.dash-view').forEach(d => d.classList.remove('active'));
+  document.getElementById('dash-patient').classList.add('active');
+  const u = currentUser;
+  document.getElementById('pt-name-sidebar').textContent = u.name;
+  document.getElementById('pt-hid-sidebar').textContent = u.healthId;
+  document.getElementById('pt-welcome').textContent = `Good morning, ${u.name.split(' ')[0]}! 👋`;
+  // Stats
+  document.getElementById('pt-doc-count').textContent = u.reports.length;
+  document.getElementById('pt-rx-count').textContent = u.prescriptions.length;
+  // Meds
+  renderCurrentMeds();
+  showPatientTab('overview');
+  notify('✅', `Welcome back, ${u.name}!`);
+}
+
+function renderCurrentMeds() {
+  const u = currentUser;
+  const el = document.getElementById('pt-current-meds');
+  if (!el) return;
+  const latestRx = u.prescriptions.slice(-1)[0];
+  if (!latestRx) { el.innerHTML='<p style="color:var(--sub);font-size:14px">No current medications</p>'; return; }
+  el.innerHTML = latestRx.medicines.map(m => `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)">
+      <div><div style="font-weight:600;font-size:14px;color:var(--text)">💊 ${m.name}</div><div style="font-size:12px;color:var(--sub)">${m.dose} · ${m.freq}</div></div>
+      <span class="badge badge-blue">${m.duration}</span>
+    </div>`).join('');
+}
+
+function showPatientTab(tab) {
+  document.querySelectorAll('.patient-tab').forEach(t => t.style.display='none');
+  document.querySelectorAll('#dash-patient .side-item').forEach(s => s.classList.toggle('active', s.dataset.tab===tab));
+  document.getElementById('pt-tab-'+tab).style.display='block';
+  if (tab==='healthid') renderHealthId();
+  if (tab==='reports') renderReports();
+  if (tab==='prescriptions') renderPrescriptions();
+  if (tab==='profile') renderProfile();
+}
+
+function renderHealthId() {
+  const u = currentUser;
+  document.getElementById('hid-display').textContent = u.healthId;
+  document.getElementById('hid-details').innerHTML = `
+    <div><div style="font-size:11px;opacity:0.6;text-transform:uppercase">Name</div><div style="font-weight:600;margin-top:2px">${u.name}</div></div>
+    <div><div style="font-size:11px;opacity:0.6;text-transform:uppercase">Blood</div><div style="font-weight:600;margin-top:2px">${u.blood}</div></div>
+    <div><div style="font-size:11px;opacity:0.6;text-transform:uppercase">Allergies</div><div style="font-weight:600;margin-top:2px">${u.allergies}</div></div>
+    <div><div style="font-size:11px;opacity:0.6;text-transform:uppercase">DOB</div><div style="font-weight:600;margin-top:2px">${u.dob}</div></div>`;
+  const qrEl = document.getElementById('qr-container');
+  qrEl.innerHTML = '';
+  new QRCode(qrEl, { text: `MEDLINK:${u.healthId}:${u.name}:${u.blood}:${u.allergies}`, width:120, height:120, colorDark:'#0066CC', colorLight:'#ffffff' });
+}
+
+function renderReports() {
+  const u = currentUser;
+  const el = document.getElementById('pt-reports-list');
+  if (!u.reports.length) { el.innerHTML='<div style="text-align:center;padding:40px;color:var(--sub)">No reports yet. Upload your first medical record above.</div>'; return; }
+  el.innerHTML = `<div class="feat-card"><table class="data-table"><thead><tr><th>Document</th><th>Date</th><th>Type</th><th>Size</th><th>Action</th></tr></thead><tbody>
+    ${u.reports.map(r => `<tr>
+      <td><div style="display:flex;align-items:center;gap:8px"><span>${r.type==='PDF'?'📄':'🖼️'}</span><span style="font-weight:500;color:var(--text)">${r.name}</span></div></td>
+      <td style="color:var(--sub)">${r.date}</td>
+      <td><span class="badge badge-blue">${r.type}</span></td>
+      <td style="color:var(--sub)">${r.size}</td>
+      <td><button onclick="notify('👁️','Opening ${r.name}...')" class="badge badge-green" style="cursor:pointer">View</button></td>
+    </tr>`).join('')}
+  </tbody></table></div>`;
+}
+
+function renderPrescriptions() {
+  const u = currentUser;
+  const el = document.getElementById('pt-prescriptions-list');
+  if (!u.prescriptions.length) { el.innerHTML='<div style="text-align:center;padding:40px;color:var(--sub)">No prescriptions yet.</div>'; return; }
+  el.innerHTML = u.prescriptions.map(rx => `
+    <div class="feat-card mb-4">
+      <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+        <div><h3 style="font-weight:700;color:var(--text)">Prescription #${rx.id}</h3><div style="font-size:13px;color:var(--sub)">By ${rx.doctor} · ${rx.date}</div></div>
+        <span class="badge badge-green">Valid until ${rx.valid}</span>
+      </div>
+      <table class="data-table mb-4"><thead><tr><th>Medicine</th><th>Dose</th><th>Frequency</th><th>Duration</th></tr></thead>
+      <tbody>${rx.medicines.map(m=>`<tr><td style="font-weight:500;color:var(--text)">💊 ${m.name}</td><td>${m.dose}</td><td>${m.freq}</td><td>${m.duration}</td></tr>`).join('')}</tbody></table>
+      ${rx.notes?`<div style="padding:10px 14px;background:rgba(0,102,204,0.06);border-radius:10px;font-size:14px;color:var(--sub)">📝 ${rx.notes}</div>`:''}
+    </div>`).join('');
+}
+
+function renderProfile() {
+  const u = currentUser;
+  document.getElementById('pt-profile-card').innerHTML = `
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:24px">
+      <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#0066CC,#00C853);display:flex;align-items:center;justify-content:center;font-size:28px">🧑</div>
+      <div><h2 style="font-size:22px;font-weight:700;color:var(--text)">${u.name}</h2><div class="badge badge-blue">${u.healthId}</div></div>
+    </div>
+    <div class="grid grid-cols-2 gap-4">
+      ${[['📧 Email',u.email],['📱 Phone',u.phone],['🎂 Date of Birth',u.dob],['🩸 Blood Group',u.blood],['⚠️ Allergies',u.allergies],['🏥 Conditions',u.conditions]].map(([l,v])=>`
+        <div style="padding:14px;background:rgba(0,102,204,0.04);border-radius:12px">
+          <div style="font-size:12px;color:var(--sub);margin-bottom:4px">${l.split(' ')[0]+' '+l.split(' ').slice(1).join(' ')}</div>
+          <div style="font-weight:600;font-size:15px;color:var(--text)">${v||'—'}</div>
+        </div>`).join('')}
+    </div>`;
+}
+
+function triggerFileUpload() { document.getElementById('report-file-input').click(); }
+
+function handleFileUpload(e) {
+  const files = Array.from(e.target.files);
+  files.forEach(f => {
+    const pts = getPatients();
+    const idx = pts.findIndex(p => p.id===currentUser.id);
+    const report = { id:'R'+Date.now(), name:f.name.replace(/\.[^.]+$/,''), date: new Date().toISOString().split('T')[0], type: f.name.match(/\.(jpg|jpeg|png)$/i)?'Image':'PDF', size: (f.size/1048576).toFixed(1)+' MB' };
+    pts[idx].reports.push(report);
+    savePatients(pts);
+    currentUser = pts[idx];
+  });
+  document.getElementById('pt-doc-count').textContent = currentUser.reports.length;
+  renderReports();
+  notify('✅', `${files.length} report(s) uploaded!`);
+}
+
+let aiTyping = false;
+function generateAISummary() {
+  if (aiTyping) return;
+  aiTyping = true;
+  const btn = document.getElementById('ai-btn');
+  btn.textContent = '⏳ Generating...';
+  btn.disabled = true;
+  const u = currentUser;
+  const customInput = document.getElementById('ai-input').value.trim();
+  setTimeout(() => {
+    let summary;
+    if (customInput) {
+      summary = `<strong>AI Analysis of Submitted Text:</strong><br><br>Based on the submitted medical text, the following key observations have been identified:<br><br>
+      • <strong>Primary Findings:</strong> The document indicates relevant clinical information that requires attention.<br>
+      • <strong>Medications Mentioned:</strong> Any prescribed medications should be taken as directed by your physician.<br>
+      • <strong>Follow-up Recommended:</strong> Schedule a follow-up consultation within 2-4 weeks.<br>
+      • <strong>Lifestyle Notes:</strong> Maintain regular physical activity and balanced diet.<br><br>
+      <em>This summary was auto-generated from your input text.</em>`;
+    } else {
+      summary = `<strong>Patient Health Summary — ${u.name}</strong><br><br>
+      <strong>Health ID:</strong> ${u.healthId}<br>
+      <strong>Blood Type:</strong> ${u.blood} &nbsp;|&nbsp; <strong>Allergies:</strong> ${u.allergies}<br><br>
+      <strong>Current Conditions:</strong> ${u.conditions}<br><br>
+      <strong>Active Medications:</strong><br>
+      ${u.prescriptions.length ? u.prescriptions.slice(-1)[0].medicines.map(m=>`• ${m.name} — ${m.dose}, ${m.freq}`).join('<br>') : 'None recorded'}<br><br>
+      <strong>Recent Reports (${u.reports.length}):</strong> ${u.reports.map(r=>r.name).join(', ') || 'None uploaded'}<br><br>
+      <strong>AI Recommendation:</strong> Based on the current health profile, it is advised to maintain regular monitoring for ${u.conditions}. Ensure medication adherence and schedule the next consultation within 30 days. No critical anomalies detected.`;
+    }
+    document.getElementById('ai-output').innerHTML = summary;
+    document.getElementById('ai-output-section').style.display = 'block';
+    btn.textContent = '🤖 Regenerate Summary';
+    btn.disabled = false;
+    aiTyping = false;
+    notify('🤖', 'AI Summary generated!');
+  }, 1800);
+}
+
+// ====== DOCTOR DASHBOARD ======
+function loadDoctorDash() {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.dash-view').forEach(d => d.classList.remove('active'));
+  document.getElementById('dash-doctor').classList.add('active');
+  const u = currentUser;
+  document.getElementById('dr-name-sidebar').textContent = u.name;
+  document.getElementById('dr-welcome').textContent = `Good morning, ${u.name}! 👋`;
+  // Populate patient select
+  const sel = document.getElementById('rx-patient-select');
+  sel.innerHTML = '<option value="">-- Select Patient --</option>';
+  getPatients().forEach(p => { const o = document.createElement('option'); o.value=p.id; o.textContent=`${p.name} (${p.healthId})`; sel.appendChild(o); });
+  sel.onchange = () => previewRxPatient(sel.value);
+  // Init med list
+  document.getElementById('rx-med-list').innerHTML = '';
+  addRxMed();
+  // Set date
+  const d = new Date(); d.setDate(d.getDate()+30);
+  document.getElementById('rx-valid-until').value = d.toISOString().split('T')[0];
+  // Render tables
+  renderDrPatients();
+  renderDrSchedule();
+  showDoctorTab('overview');
+  notify('✅', `Welcome, ${u.name}!`);
+}
+
+function showDoctorTab(tab) {
+  document.querySelectorAll('.doctor-tab').forEach(t => t.style.display='none');
+  document.querySelectorAll('#dash-doctor .side-item').forEach(s => s.classList.toggle('active', s.dataset.tab===tab));
+  document.getElementById('dr-tab-'+tab).style.display='block';
+}
+
+function renderDrPatients() {
+  const tbody = document.getElementById('dr-patients-body');
+  tbody.innerHTML = getPatients().map(p => `
+    <tr>
+      <td style="font-weight:500;color:var(--text)">${p.name}</td>
+      <td class="font-mono" style="color:var(--p);font-size:13px">${p.healthId}</td>
+      <td><span class="badge badge-red" style="background:rgba(255,0,0,0.1);color:#cc0000">${p.blood}</span></td>
+      <td style="color:var(--sub)">Oct 2024</td>
+      <td><span class="badge badge-green">Active</span></td>
+      <td><button onclick="showDoctorTab('prescriptions');preSelectPatient('${p.id}')" class="badge badge-blue" style="cursor:pointer">💊 Prescribe</button></td>
+    </tr>`).join('');
+}
+
+function renderDrSchedule() {
+  const el = document.getElementById('dr-schedule-list');
+  const slots = [
+    {time:'9:00 AM', patient:'Rahul Sharma', type:'Follow-up', status:'Completed'},
+    {time:'10:30 AM', patient:'Anjali Rao', type:'Consultation', status:'In Progress'},
+    {time:'12:00 PM', patient:'Break', type:'', status:''},
+    {time:'2:00 PM', patient:'Vikram Singh', type:'Initial', status:'Scheduled'},
+    {time:'3:30 PM', patient:'Meera Patel', type:'Follow-up', status:'Scheduled'},
+    {time:'5:00 PM', patient:'Suresh Kumar', type:'Consultation', status:'Scheduled'},
+  ];
+  el.innerHTML = slots.map(s => `
+    <div style="display:flex;align-items:center;gap:16px;padding:14px 0;border-bottom:1px solid var(--border)">
+      <div style="min-width:80px;font-weight:700;color:var(--p);font-size:14px">${s.time}</div>
+      <div style="flex:1"><div style="font-weight:600;font-size:15px;color:var(--text)">${s.patient}</div>${s.type?`<div style="font-size:12px;color:var(--sub)">${s.type}</div>`:''}</div>
+      ${s.status?`<span class="badge ${s.status==='Completed'?'badge-green':s.status==='In Progress'?'badge-orange':'badge-blue'}">${s.status}</span>`:''}
+    </div>`).join('');
+}
+
+function preSelectPatient(pid) {
+  const sel = document.getElementById('rx-patient-select');
+  sel.value = pid;
+  previewRxPatient(pid);
+}
+
+function previewRxPatient(pid) {
+  const p = getPatients().find(x=>x.id===pid);
+  const el = document.getElementById('rx-patient-preview');
+  if (!p) { el.style.display='none'; return; }
+  el.style.display='block';
+  el.innerHTML = `🧑 <strong>${p.name}</strong> &nbsp;|&nbsp; ${p.healthId} &nbsp;|&nbsp; Blood: <strong>${p.blood}</strong> &nbsp;|&nbsp; Allergies: <strong style="color:#dc2626">${p.allergies}</strong>`;
+}
+
+function addRxMed() {
+  const list = document.getElementById('rx-med-list');
+  const div = document.createElement('div');
+  div.className = 'grid grid-cols-4 gap-2 mb-2';
+  div.innerHTML = `
+    <input class="field" placeholder="Medicine name" style="grid-column:span 2">
+    <input class="field" placeholder="Dose (e.g. 1 tab)">
+    <input class="field" placeholder="Frequency">
+    <input class="field" placeholder="Duration" style="grid-column:span 2">
+    <button onclick="this.parentElement.remove()" style="background:rgba(220,38,38,0.1);border:none;border-radius:10px;cursor:pointer;color:#dc2626;font-size:20px;padding:4px 10px;grid-column:span 2">×</button>`;
+  list.appendChild(div);
+}
+
+function submitPrescription() {
+  const pid = document.getElementById('rx-patient-select').value;
+  if (!pid) { notify('⚠️', 'Select a patient first'); return; }
+  const rows = document.getElementById('rx-med-list').querySelectorAll('.grid');
+  const medicines = [];
+  rows.forEach(row => {
+    const inputs = row.querySelectorAll('input');
+    if (inputs[0].value.trim()) medicines.push({ name:inputs[0].value, dose:inputs[1].value||'1 tab', freq:inputs[2].value||'Once daily', duration:inputs[3].value||'30 days' });
+  });
+  if (!medicines.length) { notify('⚠️', 'Add at least one medicine'); return; }
+  const pts = getPatients();
+  const idx = pts.findIndex(p=>p.id===pid);
+  const rx = { id:'RX'+Date.now(), doctor:currentUser.name, date:new Date().toISOString().split('T')[0], medicines, notes:document.getElementById('rx-notes').value, valid:document.getElementById('rx-valid-until').value };
+  pts[idx].prescriptions.push(rx);
+  savePatients(pts);
+  document.getElementById('rx-success').style.display='block';
+  notify('💊', 'Prescription issued and synced to patient!');
+  setTimeout(() => document.getElementById('rx-success').style.display='none', 4000);
+}
+
+// ====== ADMIN DASHBOARD ======
+function loadAdminDash() {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.dash-view').forEach(d => d.classList.remove('active'));
+  document.getElementById('dash-admin').classList.add('active');
+  renderAdminData();
+  showAdminTab('overview');
+  notify('✅', 'Welcome, Admin!');
+}
+
+function showAdminTab(tab) {
+  document.querySelectorAll('.admin-tab').forEach(t => t.style.display='none');
+  document.querySelectorAll('#dash-admin .side-item').forEach(s => s.classList.toggle('active', s.dataset.tab===tab));
+  document.getElementById('ad-tab-'+tab).style.display='block';
+  if (tab==='overview') updateAdminStats();
+  if (tab==='patients') renderAdminPatients();
+  if (tab==='doctors') renderAdminDoctors();
+}
+
+function updateAdminStats() {
+  const pts = getPatients(), docs = getDoctors();
+  const totalRx = pts.reduce((s,p)=>s+p.prescriptions.length,0);
+  const totalRpt = pts.reduce((s,p)=>s+p.reports.length,0);
+  document.getElementById('adm-pt-count').textContent = pts.length;
+  document.getElementById('adm-dr-count').textContent = docs.length;
+  document.getElementById('adm-rx-count').textContent = totalRx;
+  document.getElementById('adm-rpt-count').textContent = totalRpt;
+  const events = [
+    {icon:'💊', msg:'Dr. Priya issued prescription to Rahul Sharma', time:'10 min ago'},
+    {icon:'📤', msg:'Rahul Sharma uploaded CBC report', time:'25 min ago'},
+    {icon:'✨', msg:'New patient registered: Anjali Rao', time:'1 hr ago'},
+    {icon:'🤖', msg:'AI summary generated for Vikram Singh', time:'2 hr ago'},
+    {icon:'🔐', msg:'Admin login from 192.168.1.1', time:'3 hr ago'},
+  ];
+  document.getElementById('adm-events-list').innerHTML = events.map(e=>`
+    <div style="display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--border)">
+      <span style="font-size:20px">${e.icon}</span>
+      <div><div style="font-size:14px;color:var(--text);font-weight:500">${e.msg}</div><div style="font-size:12px;color:var(--sub)">${e.time}</div></div>
+    </div>`).join('');
+}
+
+function renderAdminData() { renderAdminPatients(); renderAdminDoctors(); }
+
+function renderAdminPatients() {
+  document.getElementById('adm-patients-body').innerHTML = getPatients().map(p=>`
+    <tr>
+      <td style="font-weight:500;color:var(--text)">${p.name}</td>
+      <td class="font-mono" style="color:var(--p);font-size:13px">${p.healthId}</td>
+      <td>${p.blood}</td>
+      <td style="color:var(--sub)">${p.dob}</td>
+      <td style="color:var(--sub)">${p.conditions}</td>
+      <td><span class="badge badge-green">Active</span></td>
+    </tr>`).join('');
+}
+
+function renderAdminDoctors() {
+  document.getElementById('adm-doctors-body').innerHTML = getDoctors().map(d=>`
+    <tr>
+      <td style="font-weight:500;color:var(--text)">${d.name}</td>
+      <td>${d.specialty}</td>
+      <td style="color:var(--sub)">${d.hospital}</td>
+      <td style="color:var(--p);font-weight:600">${d.patients}</td>
+      <td><span class="badge badge-green">Active</span></td>
+    </tr>`).join('');
+}
+
+// ====== NOTIFICATIONS ======
+let notifTimer;
+function notify(icon, msg) {
+  const el = document.getElementById('notif');
+  document.getElementById('notif-icon').textContent = icon;
+  document.getElementById('notif-msg').textContent = msg;
+  el.classList.add('show');
+  clearTimeout(notifTimer);
+  notifTimer = setTimeout(() => el.classList.remove('show'), 3500);
+}
+
+// ====== MISC ======
+function showDemoForm() {
+  document.getElementById('demo-form').scrollIntoView({behavior:'smooth'});
+}
+
+function submitContact() {
+  const name = document.querySelector('#demo-form input[type=text]').value;
+  if (!name) { notify('⚠️', 'Please fill your name'); return; }
+  notify('📨', 'Message sent! We\'ll get back to you soon.');
+}
+
+function downloadQR() { notify('⬇️', 'QR Code downloaded!'); }
+
+// Hero QR
+function initHeroQR() {
+  const el = document.getElementById('hero-qr');
+  if (el && typeof QRCode !== 'undefined') {
+    new QRCode(el, { text:'MEDLINK:MED-2024-7829:EMERGENCY:B+:Penicillin', width:72, height:72, colorDark:'#0066CC', colorLight:'#ffffff' });
+  }
+}
+
+// ====== INIT ======
+document.addEventListener('DOMContentLoaded', () => {
+  initDB();
+  AOS.init({ duration:700, once:true, easing:'ease-out-cubic' });
+  setTimeout(initHeroQR, 500);
+});
+</script>
+</body>
+</html>
